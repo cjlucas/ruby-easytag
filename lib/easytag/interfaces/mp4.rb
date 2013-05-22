@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 module EasyTag::Interfaces
   class MP4 < Base
     # type of TagLib::MP4::Item
