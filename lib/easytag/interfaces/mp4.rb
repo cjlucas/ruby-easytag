@@ -46,12 +46,20 @@ module EasyTag::Interfaces
       @tag = @info.tag
     end
 
+    def title
+      obj_for_item_key(:nam, ItemType::STRING)
+    end
+
     def artist
       obj_for_item_key(:art, ItemType::STRING)
     end
 
     def album_artist
       obj_for_item_key(:aart, ItemType::STRING)
+    end
+
+    def album
+      obj_for_item_key(:alb, ItemType::STRING)
     end
 
     def genre

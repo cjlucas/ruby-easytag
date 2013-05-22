@@ -7,12 +7,20 @@ module EasyTag::Interfaces
       @id3v2 = @info.id3v2_tag
     end
 
+    def title
+      obj_for_frame_id('TIT2')
+    end
+
     def artist
       obj_for_frame_id('TPE1')
     end
 
     def album_artist
       obj_for_frame_id('TPE2')
+    end
+
+    def album
+      obj_for_frame_id('TALB')
     end
 
     # REVIEW: TCON supports genre refining, which we currently don't utilize
