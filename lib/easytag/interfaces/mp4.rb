@@ -56,6 +56,10 @@ module EasyTag::Interfaces
       obj_for_item_key(:gen, ItemType::STRING)
     end
 
+    def comments
+      obj_for_item_key(:cmt, ItemType::STRING)
+    end
+
     private
     def lookup_item(key)
       item_id = ITEM_LIST_KEY_MAP.fetch(key, nil)

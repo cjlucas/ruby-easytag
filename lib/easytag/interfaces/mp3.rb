@@ -20,6 +20,11 @@ module EasyTag::Interfaces
       obj_for_frame_id('TCON')
     end
 
+    def comments
+      comm_frame = @id3v2.frame_list('COMM')[0]
+      Base.obj_or_nil(comm_frame.text) unless comm_frame.nil?
+    end
+
     private
 
     def obj_for_frame_id(frame_id)
