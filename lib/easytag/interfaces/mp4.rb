@@ -70,6 +70,14 @@ module EasyTag::Interfaces
       obj_for_item_key(:cmt, ItemType::STRING)
     end
 
+    def year
+      return @year unless @year.nil?
+
+      # taglib returns the year as a string, we want an int
+      o = obj_for_item_key(:day, ItemType::STRING)
+      @year = o.to_i unless o.nil?
+    end
+
     private
     def lookup_item(key)
       item_id = ITEM_LIST_KEY_MAP.fetch(key, nil)

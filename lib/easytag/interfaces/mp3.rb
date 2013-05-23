@@ -1,3 +1,7 @@
+require 'mp3info'
+
+require 'easytag'
+
 module EasyTag::Interfaces
 
   class MP3 < Base
@@ -5,6 +9,16 @@ module EasyTag::Interfaces
       @info = TagLib::MPEG::File.new(file)
       @id3v1 = @info.id3v1_tag
       @id3v2 = @info.id3v2_tag
+
+      # this is required because taglib hash issues with the TDAT/TYER
+      # frame (https://github.com/taglib/taglib/issues/127)
+      @id3v2_hash = ID3v2.new
+
+      File.open(file) do |fp|
+        fp.read(3) # read past ID3 identifier
+        @id3v2_hash.from_io(fp)
+      end
+
     end
 
     def title
@@ -31,6 +45,10 @@ module EasyTag::Interfaces
     def comments
       comm_frame = @id3v2.frame_list('COMM')[0]
       Base.obj_or_nil(comm_frame.text) unless comm_frame.nil?
+    end
+
+    def year
+      @info.tag.year
     end
 
     private
