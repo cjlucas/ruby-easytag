@@ -62,7 +62,7 @@ module EasyTag::Interfaces
     # TODO: need to support TDRC tag (new in id3v2.4)
     def date
       return @date unless @date.nil?
-      return nil if year.nil?
+      return nil if year.nil? or year == 0
 
       date_fmt = '%Y'
       date_str = year.to_s

@@ -81,7 +81,7 @@ module EasyTag::Interfaces
 
     def date
       return @date unless @date.nil?
-      return nil if year.nil?
+      return nil if year.nil? or year == 0
 
       @date = DateTime.strptime("#{year}", "%Y")
     end
