@@ -26,11 +26,11 @@ module EasyTag::Interfaces
     end
 
     def title
-      obj_for_frame_id('TIT2')
+      obj_for_frame_id('TIT2') or Base.obj_or_nil(@id3v1.title)
     end
 
     def artist
-      obj_for_frame_id('TPE1')
+      obj_for_frame_id('TPE1') or Base.obj_or_nil(@id3v1.artist)
     end
 
     def album_artist
@@ -38,17 +38,21 @@ module EasyTag::Interfaces
     end
 
     def album
-      obj_for_frame_id('TALB')
+      obj_for_frame_id('TALB') or Base.obj_or_nil(@id3v1.album)
     end
 
     # REVIEW: TCON supports genre refining, which we currently don't utilize
     def genre
-      obj_for_frame_id('TCON')
+      obj_for_frame_id('TCON') or Base.obj_or_nil(@id3v1.genre)
     end
 
     def comments
-      comm_frame = @id3v2.frame_list('COMM')[0]
-      Base.obj_or_nil(comm_frame.text) unless comm_frame.nil?
+      return @comments unless @comments.nil?
+
+      comm_frame = lookup_frames('COMM').first
+      comm_str = comm_frame ? comm_frame.text : @id3v1.comment
+
+      @comments = Base.obj_or_nil(comm_str)
     end
 
     def year
