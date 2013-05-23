@@ -16,7 +16,11 @@ module EasyTag::Interfaces
 
       File.open(file) do |fp|
         fp.read(3) # read past ID3 identifier
-        @id3v2_hash.from_io(fp)
+        begin
+          @id3v2_hash.from_io(fp)
+        rescue ID3v2Error => e
+          warn 'no id3v2 tags found'
+        end
       end
 
     end
