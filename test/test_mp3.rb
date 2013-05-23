@@ -18,6 +18,7 @@ class TestID3v1OnlyMP3 < Test::Unit::TestCase
     assert_equal(1988,                @mp3.year)
     assert_equal(1988,                @mp3.date.year)
     assert_equal(true,                @mp3.album_art.empty?)
+    assert_equal(nil,                 @mp3.apple_id)
 
   end
 end
@@ -36,6 +37,7 @@ class TestID3v2OnlyMP3 < Test::Unit::TestCase
     assert_equal(1988,                @mp3.year)
     assert_equal(1988,                @mp3.date.year)
     assert_equal(true,                @mp3.album_art.empty?)
+    assert_equal(nil,                 @mp3.apple_id)
 
   end
 end
@@ -55,6 +57,7 @@ class TestNoTagsMP3 < Test::Unit::TestCase
     assert_equal(0,    @mp3.year)
     assert_equal(nil,  @mp3.date)
     assert_equal(true, @mp3.album_art.empty?)
+    assert_equal(nil,  @mp3.apple_id)
   end
 
 end

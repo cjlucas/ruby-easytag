@@ -98,6 +98,10 @@ module EasyTag::Interfaces
       @album_art
     end
 
+    def apple_id
+      obj_for_item_key(:apid, ItemType::STRING)
+    end
+
     private
     def lookup_item(key)
       item_id = ITEM_LIST_KEY_MAP.fetch(key, nil)
