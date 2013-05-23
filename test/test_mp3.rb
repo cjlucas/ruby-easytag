@@ -22,6 +22,24 @@ class TestID3v1OnlyMP3 < Test::Unit::TestCase
   end
 end
 
+class TestID3v2OnlyMP3 < Test::Unit::TestCase
+  def setup
+    @mp3 = EasyTag::File.new("#{TEST_DIR}only_id3v2.mp3")
+  end
+
+  def test_tags
+    assert_equal('Track Title',       @mp3.title)
+    assert_equal('Track Artist',      @mp3.artist)
+    assert_equal('Album Name',        @mp3.album)
+    assert_equal('this is a comment', @mp3.comments)
+    assert_equal('Swing',             @mp3.genre)
+    assert_equal(1988,                @mp3.year)
+    assert_equal(1988,                @mp3.date.year)
+    assert_equal(true,                @mp3.album_art.empty?)
+
+  end
+end
+
 class TestNoTagsMP3 < Test::Unit::TestCase
   def setup
     @mp3 = EasyTag::File.new("#{TEST_DIR}no_tags.mp3")
