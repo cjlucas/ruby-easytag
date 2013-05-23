@@ -1,3 +1,6 @@
+require 'date'
+
+require 'easytag/image'
 require 'easytag/interfaces/base'
 require 'easytag/interfaces/mp3'
 require 'easytag/interfaces/mp4'

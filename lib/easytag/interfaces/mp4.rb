@@ -4,11 +4,12 @@ module EasyTag::Interfaces
   class MP4 < Base
     # type of TagLib::MP4::Item
     module ItemType
-      STRING      = 0
-      STRING_LIST = 1
-      BOOL        = 2
-      INT         = 3
-      INT_PAIR    = 4
+      STRING         = 0
+      STRING_LIST    = 1
+      BOOL           = 2
+      INT            = 3
+      INT_PAIR       = 4
+      COVER_ART_LIST = 5
     end
 
     ITEM_LIST_KEY_MAP = {
@@ -78,6 +79,25 @@ module EasyTag::Interfaces
       @year = o.to_i unless o.nil?
     end
 
+    def date
+      return @date unless @date.nil?
+      return nil if year.nil?
+
+      @date = DateTime.strptime("#{year}", "%Y")
+    end
+
+    def album_art
+      return @album_art unless @album_art.nil?
+
+      @album_art = []
+      covers = obj_for_item_key(:covr, ItemType::COVER_ART_LIST)
+      covers.each do |cover|
+        @album_art << EasyTag::Image.new(cover.data)
+      end
+
+      @album_art
+    end
+
     private
     def lookup_item(key)
       item_id = ITEM_LIST_KEY_MAP.fetch(key, nil)
@@ -96,6 +116,8 @@ module EasyTag::Interfaces
         item.to_int
       when ItemType::INT_PAIR
         item.to_int_pair
+      when ItemType::COVER_ART_LIST
+        item.to_cover_art_list
       else
         nil
       end

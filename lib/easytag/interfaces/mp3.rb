@@ -48,7 +48,40 @@ module EasyTag::Interfaces
     end
 
     def year
-      @info.tag.year
+      @year ||= @info.tag.year
+    end
+
+    # TODO: need to support TDRC tag (new in id3v2.4)
+    def date
+      return @date unless @date.nil?
+      return nil if year.nil?
+
+      date_fmt = '%Y'
+      date_str = year.to_s
+
+      # check for exact date (ID3v2 gives as MMDD)
+      if @id3v2_hash['TDAT']
+        date_str << @id3v2_hash['TDAT']
+        date_fmt << '%d%m'
+      end
+
+      @date = DateTime.strptime(date_str, date_fmt)
+    end
+
+    def album_art
+      return @album_art unless @album_art.nil?
+
+      @album_art = []
+      @id3v2.frame_list('APIC').each do |apic|
+        img           = EasyTag::Image.new(apic.picture)
+        img.desc      = apic.description
+        img.type      = apic.type
+        img.mime_type = apic.mime_type
+
+        @album_art << img
+      end
+
+      @album_art
     end
 
     private
