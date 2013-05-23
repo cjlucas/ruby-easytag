@@ -1,5 +1,3 @@
-require 'date'
-
 require 'easytag/image'
 require 'easytag/interfaces/base'
 require 'easytag/interfaces/mp3'

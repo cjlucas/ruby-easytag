@@ -4,7 +4,7 @@ module EasyTag::Interfaces
   class MP4 < Base
     # type of TagLib::MP4::Item
     module ItemType
-      STRING         = 0
+      STRING         = 0 # not part of TagLib::MP4::Item, just for convenience
       STRING_LIST    = 1
       BOOL           = 2
       INT            = 3
@@ -13,33 +13,33 @@ module EasyTag::Interfaces
     end
 
     ITEM_LIST_KEY_MAP = {
-      :itunmovi => '----:com.apple.iTunes:iTunMOVI',
-      :itunnorm => '----:com.apple.iTunes:iTunNORM',
-      :itunsmpb => '----:com.apple.iTunes:iTunSMPB',
-      :aart     => 'aART',
+      :aart     => 'aART', # Album Artist
       :akid     => 'akID',
-      :apid     => 'apID',
+      :apid     => 'apID', # Apple ID
       :atid     => 'atID',
       :cnid     => 'cnID',
-      :covr     => 'covr',
+      :covr     => 'covr', # Cover Art
       :cpil     => 'cpil',
       :cprt     => 'cprt',
-      :disk     => 'disk',
+      :disk     => 'disk', # Disk [num, total]
       :geid     => 'geID',
       :pgap     => 'pgap',
       :plid     => 'plID',
-      :purd     => 'purd',
+      :purd     => 'purd', # Purchase Date
       :rtng     => 'rtng',
       :sfid     => 'sfID',
       :stik     => 'stik',
-      :trkn     => 'trkn',
-      :art      => '©ART',
-      :alb      => '©alb',
-      :cmt      => '©cmt',
-      :day      => '©day',
-      :gen      => '©gen',
-      :nam      => '©nam',
-      :too      => '©too',
+      :trkn     => 'trkn', # Track [num, total]
+      :art      => '©ART', # Track Artist
+      :alb      => '©alb', # Album
+      :cmt      => '©cmt', # Comments
+      :day      => '©day', # Release Date
+                           # (ex: 2006, 2004-08-10, 2007-11-27T08:00:00Z)
+      :gen      => '©gen', # Genre
+      :nam      => '©nam', # Title
+      :too      => '©too', # Encoder
+      :soaa     => 'soaa', # Sort Order - Album Artist
+      :soar     => 'soar', # Sort Order - Track Artist
     }
 
     def initialize(file)
@@ -71,19 +71,17 @@ module EasyTag::Interfaces
       obj_for_item_key(:cmt, ItemType::STRING)
     end
 
+    # because :day can be anything, including a year, or an exact date,
+    # we'll let #date do the parsing, and just grab the year from it
     def year
-      return @year unless @year.nil?
-
-      # taglib returns the year as a string, we want an int
-      o = obj_for_item_key(:day, ItemType::STRING)
-      @year = o.to_i unless o.nil?
+      date.nil? ? 0 : date.year
     end
 
     def date
       return @date unless @date.nil?
-      return nil if year.nil? or year == 0
 
-      @date = DateTime.strptime("#{year}", "%Y")
+      date_str = obj_for_item_key(:day, ItemType::STRING)
+      @date ||= EasyTag::Utilities.get_datetime(date_str)
     end
 
     def album_art
