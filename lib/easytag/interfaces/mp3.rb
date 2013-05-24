@@ -108,16 +108,7 @@ module EasyTag::Interfaces
     # for TPOS and TRCK
     def int_pair_for_frame_id(frame_id)
       str = obj_for_frame_id(frame_id)
-
-      pair = [0, 0]
-      unless str.nil?
-        if str.include?('/')
-          pair = str.split('/').map { |it| it.to_i }
-        else
-          pair[0] = str.to_i
-        end
-      end
-      pair
+      EasyTag::Utilities.get_int_pair(str) unless str.nil?
     end
 
     def obj_for_frame_id(frame_id)

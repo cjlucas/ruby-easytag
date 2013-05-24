@@ -33,5 +33,22 @@ module EasyTag
       datetime
     end
 
+    # get_int_pair
+    #
+    # Parses a pos/total string and returns a pair of ints
+    def self.get_int_pair(str)
+      pair = [0, 0]
+
+      unless str.nil? || str.empty?
+        if str.include?('/')
+          pair = str.split('/').map { |it| it.to_i }
+        else
+          pair[0] = str.to_i
+        end
+      end
+
+      pair
+    end
+
   end
 end
