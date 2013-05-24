@@ -121,7 +121,7 @@ module EasyTag::Interfaces
     # for TPOS and TRCK
     def int_pair_for_frame_id(frame_id)
       str = obj_for_frame_id(frame_id)
-      EasyTag::Utilities.get_int_pair(str) unless str.nil?
+      EasyTag::Utilities.get_int_pair(str)
     end
 
     def obj_for_frame_id(frame_id)
