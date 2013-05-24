@@ -1,9 +1,11 @@
+EasyTag is an abstraction layer to the powerful [TagLib](http://taglib.github.io/) library. This project is designed to provide a simple and consistent API regardless of file format.
+
+A quick reference to which attributes are currently supported can be found [here](https://github.com/cjlucas/ruby-easytag/wiki/Currently-Supported-Attributes).
+
 [![Build Status (master)](https://travis-ci.org/cjlucas/ruby-easytag.png?branch=master "Branch: master")](https://travis-ci.org/cjlucas/ruby-easytag)
 [![Build Status (develop)](https://travis-ci.org/cjlucas/ruby-easytag.png?branch=develop "Branch: develop")](https://travis-ci.org/cjlucas/ruby-easytag)
 
-ruby-easytag is an abstraction layer to the powerful [TagLib](http://taglib.github.io/) library. This project is designed to provide a simple and consistent API regardless of file format.
-
-A quick reference to which attributes are currently supported can be found [here](https://github.com/cjlucas/ruby-easytag/wiki/Currently-Supported-Attributes).
+---
 ## Synopsis ##
 ```ruby
 require 'easytag'
