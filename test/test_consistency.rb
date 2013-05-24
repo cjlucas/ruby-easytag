@@ -18,6 +18,8 @@ class TestConsistencyMP3 < Test::Unit::TestCase
     assert_equal('This is my comment.', @mp3.comments)
     assert_equal('Polka',               @mp3.genre)
     assert_equal(1941,                  @mp3.year)
+    assert_equal([5, 0],                @mp3.track_num)
+    assert_equal([3, 0],                @mp3.disc_num)
   end
 
   def test_date
@@ -75,10 +77,6 @@ class TestConsistency < Test::Unit::TestCase
     assert_equal(img_mp3.mime_type, img_mp4.mime_type)
     assert_equal(img_mp3.data, img_mp4.data)
   end
-
-  #def test_audio_data
-    #assert_equal(true, (@mp3.duration - @mp4.duration).abs < 0.1)
-  #end
 
 end
 
