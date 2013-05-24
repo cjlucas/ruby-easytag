@@ -92,7 +92,30 @@ module EasyTag::Interfaces
       @album_art
     end
 
+    def track_num
+      int_pair_for_frame_id('TRCK')
+    end
+
+    def disc_num
+      int_pair_for_frame_id('TPOS')
+    end
+
     private
+
+    # for TPOS and TRCK
+    def int_pair_for_frame_id(frame_id)
+      str = obj_for_frame_id(frame_id)
+
+      pair = [0, 0]
+      unless str.nil?
+        if str.include?('/')
+          pair = str.split('/').map { |it| it.to_i }
+        else
+          pair[0] = str.to_i
+        end
+      end
+      pair
+    end
 
     def obj_for_frame_id(frame_id)
       Base.obj_or_nil(lookup_first_field(frame_id))

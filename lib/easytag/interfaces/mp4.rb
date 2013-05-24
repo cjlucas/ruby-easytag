@@ -100,6 +100,14 @@ module EasyTag::Interfaces
       obj_for_item_key(:apid, ItemType::STRING)
     end
 
+    def track_num
+      obj_for_item_key(:trkn, ItemType::INT_PAIR)
+    end
+
+    def disc_num
+      obj_for_item_key(:disk, ItemType::INT_PAIR)
+    end
+
     private
     def lookup_item(key)
       item_id = ITEM_LIST_KEY_MAP.fetch(key, nil)
