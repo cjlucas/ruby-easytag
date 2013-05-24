@@ -93,7 +93,10 @@ module EasyTag::Interfaces
     end
 
     def track_num
-      int_pair_for_frame_id('TRCK')
+      return @track_num unless @track_num.nil?
+
+      pair = int_pair_for_frame_id('TRCK')
+      @track_num = (pair == [0, 0]) ? [@id3v1.track, 0] : pair
     end
 
     def disc_num
