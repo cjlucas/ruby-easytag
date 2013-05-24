@@ -56,24 +56,24 @@ module EasyTag::Interfaces
     end
 
     def year
-      @year ||= @info.tag.year
+      date.nil? ? 0 : date.year
     end
 
-    # TODO: need to support TDRC tag (new in id3v2.4)
     def date
       return @date unless @date.nil?
-      return nil if year.nil? or year == 0
 
-      date_fmt = '%Y'
-      date_str = year.to_s
+      v10_year = @id3v1.year.to_s if @id3v1.year > 0
+      v23_year = obj_for_frame_id('TYER')
+      v23_date = Base.obj_or_nil(@id3v2_hash['TDAT'])
+      v24_date = obj_for_frame_id('TDRC')
 
-      # check for exact date (ID3v2 gives as MMDD)
-      if @id3v2_hash['TDAT']
-        date_str << @id3v2_hash['TDAT']
-        date_fmt << '%d%m'
-      end
+      # check variables in order of importance
+      date_str = (v24_date or v23_year or v10_year)
+      # only append v23_date if date_str is currently a year
+      date_str << v23_date unless v23_date.nil? or date_str.length > 4
+      puts "MP3#date: date_str = \"#{date_str}\"" if $DEBUG
 
-      @date = DateTime.strptime(date_str, date_fmt)
+      @date = EasyTag::Utilities.get_datetime(date_str)
     end
 
     def album_art
