@@ -15,6 +15,16 @@ module EasyTag
       @interface = audio_interface_class.new(file)
     end
 
+    # block interface
+    def self.open(file)
+      interface = self.new(file)
+      begin
+        yield interface if block_given?
+      ensure
+        interface.close if interface.respond_to?(:close)
+      end
+    end
+
     private
     # sufficient for now
     def audio_interface_class
