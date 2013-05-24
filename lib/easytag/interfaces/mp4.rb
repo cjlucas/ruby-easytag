@@ -88,7 +88,7 @@ module EasyTag::Interfaces
       return @album_art unless @album_art.nil?
 
       @album_art = []
-      covers = obj_for_item_key(:covr, ItemType::COVER_ART_LIST)
+      covers = obj_for_item_key(:covr, ItemType::COVER_ART_LIST) || []
       covers.each do |cover|
         @album_art << EasyTag::Image.new(cover.data)
       end
@@ -101,11 +101,11 @@ module EasyTag::Interfaces
     end
 
     def track_num
-      obj_for_item_key(:trkn, ItemType::INT_PAIR)
+      obj_for_item_key(:trkn, ItemType::INT_PAIR) || [0, 0]
     end
 
     def disc_num
-      obj_for_item_key(:disk, ItemType::INT_PAIR)
+      obj_for_item_key(:disk, ItemType::INT_PAIR) || [0, 0]
     end
 
     private
@@ -137,7 +137,7 @@ module EasyTag::Interfaces
       return nil if @tag.nil?
 
       item = lookup_item(item_key)
-      o = item_to_obj(item, item_type)
+      o = item_to_obj(item, item_type) unless item.nil?
 
       Base.obj_or_nil(o)
     end
