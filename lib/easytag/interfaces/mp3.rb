@@ -68,7 +68,7 @@ module EasyTag::Interfaces
       v24_date = obj_for_frame_id('TDRC')
 
       # check variables in order of importance
-      date_str = (v24_date or v23_year or v10_year)
+      date_str = v24_date || v23_year || v10_year
       # only append v23_date if date_str is currently a year
       date_str << v23_date unless v23_date.nil? or date_str.length > 4
       puts "MP3#date: date_str = \"#{date_str}\"" if $DEBUG
