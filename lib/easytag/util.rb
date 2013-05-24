@@ -50,5 +50,14 @@ module EasyTag
       pair
     end
 
+    def self.normalize_string(str)
+      # downcase string
+      str.downcase!
+      # we want snakecase
+      str.gsub!(/\s/, '_')
+      # we only want alphanumeric characters
+      str.gsub(/\W/, '')
+    end
+
   end
 end

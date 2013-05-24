@@ -103,6 +103,19 @@ module EasyTag::Interfaces
       int_pair_for_frame_id('TPOS')
     end
 
+    def user_info
+      return @user_info unless @user_info.nil?
+
+      @user_info = {}
+      lookup_frames('TXXX').each do |frame|
+        key, value = frame.field_list
+        key = EasyTag::Utilities.normalize_string(key)
+        @user_info[key.to_sym] = value
+      end
+
+      @user_info
+    end
+
     private
 
     # for TPOS and TRCK

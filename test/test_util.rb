@@ -38,4 +38,15 @@ class TestUtilities < Test::Unit::TestCase
     assert_equal([0, 9],  EasyTag::Utilities.get_int_pair('/9'))
     assert_equal([5, 10], EasyTag::Utilities.get_int_pair('5/10'))
   end
+
+  def test_normalize_string
+    cases = [
+    ['MusicBrainz Album Artist Id', 'musicbrainz_album_artist_id'],
+    ['\'hi ^''$there #guys\"', 'hi_there_guys'],
+    ]
+    cases.each do |c|
+      orig, result = c
+      assert_equal(result, EasyTag::Utilities.normalize_string(orig))
+    end
+  end
 end

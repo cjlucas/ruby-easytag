@@ -108,6 +108,21 @@ module EasyTag::Interfaces
       obj_for_item_key(:disk, ItemType::INT_PAIR) || [0, 0]
     end
 
+    def user_info
+      return @user_info unless @user_info.nil?
+
+      @user_info = {}
+      @tag.item_list_map.to_a.each do |key, value|
+        match_data = key.match(/\:com.apple.iTunes\:(.*)/)
+        if match_data
+          key = EasyTag::Utilities.normalize_string(match_data[1])
+          @user_info[key.to_sym] = value.to_string_list[0]
+        end
+      end
+
+      @user_info
+    end
+
     private
     def lookup_item(key)
       item_id = ITEM_LIST_KEY_MAP.fetch(key, nil)
