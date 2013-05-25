@@ -51,16 +51,32 @@ module EasyTag::Interfaces
       obj_for_item_key(:nam, ItemType::STRING)
     end
 
+    def title_sort_order
+      obj_for_item_key(:sonm, ItemType::STRING)
+    end
+
     def artist
       obj_for_item_key(:art, ItemType::STRING)
+    end
+
+    def artist_sort_order
+      obj_for_item_key(:soar, ItemType::STRING)
     end
 
     def album_artist
       obj_for_item_key(:aart, ItemType::STRING)
     end
 
+    def album_artist_sort_order
+      obj_for_item_key(:soaa, ItemType::STRING)
+    end
+
     def album
       obj_for_item_key(:alb, ItemType::STRING)
+    end
+
+    def album_sort_order
+      obj_for_item_key(:soal, ItemType::STRING)
     end
 
     def genre
@@ -121,6 +137,18 @@ module EasyTag::Interfaces
       end
 
       @user_info
+    end
+
+    def disc_subtitle
+      user_info[:discsubtitle]
+    end
+
+    def media
+      user_info[:media]
+    end
+
+    def label
+      user_info[:label]
     end
 
     private
