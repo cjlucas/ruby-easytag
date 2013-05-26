@@ -1,4 +1,12 @@
-##### v0.2.0 (Not yet released) #####
+##### v0.3.0 (Not yet released) #####
+* added:
+  - `#encoder`
+  - `#group`
+  - `#composer`
+  - `#lyrics`
+  - `#compilation?`
+
+##### v0.2.0 (2013-05-25) #####
 * added:
   - `#track_num`
   - `#disc_num`

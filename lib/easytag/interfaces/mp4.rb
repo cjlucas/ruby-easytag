@@ -19,7 +19,7 @@ module EasyTag::Interfaces
       :atid     => 'atID',
       :cnid     => 'cnID',
       :covr     => 'covr', # Cover Art
-      :cpil     => 'cpil',
+      :cpil     => 'cpil', # Compilation
       :cprt     => 'cprt',
       :disk     => 'disk', # Disk [num, total]
       :geid     => 'geID',
@@ -38,6 +38,8 @@ module EasyTag::Interfaces
       :gen      => '©gen', # Genre
       :nam      => '©nam', # Title
       :too      => '©too', # Encoder
+      :grp      => '©grp', # Grouping
+      :lyr      => '©lyr', # Lyrics
       :soaa     => 'soaa', # Sort Order - Album Artist
       :soar     => 'soar', # Sort Order - Track Artist
     }
@@ -85,6 +87,10 @@ module EasyTag::Interfaces
 
     def comments
       obj_for_item_key(:cmt, ItemType::STRING)
+    end
+
+    def lyrics
+      obj_for_item_key(:lyr, ItemType::STRING)
     end
 
     # because :day can be anything, including a year, or an exact date,
@@ -151,7 +157,24 @@ module EasyTag::Interfaces
       user_info[:label]
     end
 
+    def encoder
+      obj_for_item_key(:too, ItemType::STRING)
+    end
+
+    def group
+      obj_for_item_key(:grp, ItemType::STRING)
+    end
+
+    def composer
+      user_info[:composer]
+    end
+
+    def compilation?
+      obj_for_item_key(:cpil, ItemType::BOOL) || false
+    end
+
     private
+
     def lookup_item(key)
       item_id = ITEM_LIST_KEY_MAP.fetch(key, nil)
       @tag.item_list_map.fetch(item_id) unless item_id.nil?

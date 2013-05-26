@@ -159,6 +159,34 @@ module EasyTag::Interfaces
       obj_for_frame_id('TPUB')
     end
 
+    def encoder
+      obj_for_frame_id('TENC')
+    end
+
+    def group
+      obj_for_frame_id('TIT1')
+    end
+
+    def composer
+      obj_for_frame_id('TCOM')
+    end
+
+    def lyrics
+      frame = lookup_frames('USLT').first
+      frame.text unless frame.nil?
+    end
+
+    def compilation?
+      # NOTE: TCMP is a non-stanard frame used by iTunes
+      # TCMP is stored as a numeral string
+      str = obj_for_frame_id('TCMP')
+      if str
+        str.to_i == 1 ? true : false
+      else
+        false
+      end
+    end
+
     private
 
     # for TPOS and TRCK

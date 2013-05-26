@@ -20,6 +20,7 @@ class TestConsistencyMP301 < Test::Unit::TestCase
     assert_equal(1941,                  @mp3.year)
     assert_equal([5, 0],                @mp3.track_num)
     assert_equal([3, 0],                @mp3.disc_num)
+    assert_equal(false,                 @mp3.compilation?)
   end
 
   def test_date
@@ -103,6 +104,7 @@ class TestConsistencyMP302 < Test::Unit::TestCase
       ['The Love Below',                @mp3.disc_subtitle],
       ['CD',                            @mp3.media],
       ['Arista',                        @mp3.label],
+      [true,                            @mp3.compilation?]
     ]
 
     cases.each do |c|
@@ -157,6 +159,7 @@ class TestConsistency02 < Test::Unit::TestCase
       :disc_subtitle,
       :media,
       :label,
+      :compilation?
     ]
 
     cases.each do |c|
