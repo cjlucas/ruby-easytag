@@ -37,14 +37,14 @@ module EasyTag::Interfaces
                            # (ex: 2006, 2004-08-10, 2007-11-27T08:00:00Z)
       :gen      => '©gen', # Genre
       :nam      => '©nam', # Title
-      :too      => '©too', # Encoder
+      :too      => '©too', # Encoding Tool
       :grp      => '©grp', # Grouping
       :lyr      => '©lyr', # Lyrics
       :soaa     => 'soaa', # Sort Order - Album Artist
       :soar     => 'soar', # Sort Order - Track Artist
       :tmpo     => 'tmpo', # BPM
       :cprt     => 'cprt', # Copyright
-      :enc      => '©enc', # Encoder settings
+      :enc      => '©enc', # Encoded by
     }
 
     def initialize(file)
@@ -169,11 +169,11 @@ module EasyTag::Interfaces
     end
 
     def encoded_by
-      obj_for_item_key(:too, ItemType::STRING)
+      obj_for_item_key(:enc, ItemType::STRING)
     end
 
     def encoder_settings
-      obj_for_frame_id(:enc, ItemType::STRING)
+      obj_for_frame_id(:too, ItemType::STRING)
     end
 
     def group
