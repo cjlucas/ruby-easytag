@@ -51,16 +51,32 @@ module EasyTag::Interfaces
       obj_for_item_key(:nam, ItemType::STRING)
     end
 
+    def title_sort_order
+      obj_for_item_key(:sonm, ItemType::STRING)
+    end
+
     def artist
       obj_for_item_key(:art, ItemType::STRING)
+    end
+
+    def artist_sort_order
+      obj_for_item_key(:soar, ItemType::STRING)
     end
 
     def album_artist
       obj_for_item_key(:aart, ItemType::STRING)
     end
 
+    def album_artist_sort_order
+      obj_for_item_key(:soaa, ItemType::STRING)
+    end
+
     def album
       obj_for_item_key(:alb, ItemType::STRING)
+    end
+
+    def album_sort_order
+      obj_for_item_key(:soal, ItemType::STRING)
     end
 
     def genre
@@ -88,7 +104,7 @@ module EasyTag::Interfaces
       return @album_art unless @album_art.nil?
 
       @album_art = []
-      covers = obj_for_item_key(:covr, ItemType::COVER_ART_LIST)
+      covers = obj_for_item_key(:covr, ItemType::COVER_ART_LIST) || []
       covers.each do |cover|
         @album_art << EasyTag::Image.new(cover.data)
       end
@@ -98,6 +114,41 @@ module EasyTag::Interfaces
 
     def apple_id
       obj_for_item_key(:apid, ItemType::STRING)
+    end
+
+    def track_num
+      obj_for_item_key(:trkn, ItemType::INT_PAIR) || [0, 0]
+    end
+
+    def disc_num
+      obj_for_item_key(:disk, ItemType::INT_PAIR) || [0, 0]
+    end
+
+    def user_info
+      return @user_info unless @user_info.nil?
+
+      @user_info = {}
+      @tag.item_list_map.to_a.each do |key, value|
+        match_data = key.match(/\:com.apple.iTunes\:(.*)/)
+        if match_data
+          key = EasyTag::Utilities.normalize_string(match_data[1])
+          @user_info[key.to_sym] = value.to_string_list[0]
+        end
+      end
+
+      @user_info
+    end
+
+    def disc_subtitle
+      user_info[:discsubtitle]
+    end
+
+    def media
+      user_info[:media]
+    end
+
+    def label
+      user_info[:label]
     end
 
     private
@@ -129,7 +180,7 @@ module EasyTag::Interfaces
       return nil if @tag.nil?
 
       item = lookup_item(item_key)
-      o = item_to_obj(item, item_type)
+      o = item_to_obj(item, item_type) unless item.nil?
 
       Base.obj_or_nil(o)
     end
