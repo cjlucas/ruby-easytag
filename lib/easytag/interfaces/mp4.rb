@@ -42,6 +42,8 @@ module EasyTag::Interfaces
       :lyr      => '©lyr', # Lyrics
       :soaa     => 'soaa', # Sort Order - Album Artist
       :soar     => 'soar', # Sort Order - Track Artist
+      :tmpo     => 'tmpo', # BPM
+      :cprt     => 'cprt', # Copyright
     }
 
     def initialize(file)
@@ -55,6 +57,10 @@ module EasyTag::Interfaces
 
     def title_sort_order
       obj_for_item_key(:sonm, ItemType::STRING)
+    end
+
+    def subtitle
+      user_info[:subtitle]
     end
 
     def artist
@@ -171,6 +177,18 @@ module EasyTag::Interfaces
 
     def compilation?
       obj_for_item_key(:cpil, ItemType::BOOL) || false
+    end
+
+    def bpm
+      obj_for_item_key(:tmpo, ItemType::INT) || 0
+    end
+
+    def lyricist
+      user_info[:lyricist]
+    end
+
+    def copyright
+      obj_for_item_key(:cprt, ItemType::STRING)
     end
 
     private

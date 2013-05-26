@@ -34,6 +34,10 @@ module EasyTag::Interfaces
       # XSOT - Musicbrainz Picard custom
       obj_for_frame_id('TSOT') || obj_for_frame_id('XSOT')
     end
+    
+    def subtitle
+      obj_for_frame_id('TIT1')
+    end
 
     def artist
       obj_for_frame_id('TPE1') or Base.obj_or_nil(@id3v1.artist)
@@ -179,12 +183,20 @@ module EasyTag::Interfaces
     def compilation?
       # NOTE: TCMP is a non-stanard frame used by iTunes
       # TCMP is stored as a numeral string
-      str = obj_for_frame_id('TCMP')
-      if str
-        str.to_i == 1 ? true : false
-      else
-        false
-      end
+      obj_for_frame_id('TCMP').to_i == 1 ? true : false
+    end
+
+    def bpm
+      # use nil.to_i == 0 to our advantage
+      obj_for_frame_id('TBPM').to_i
+    end
+
+    def lyricist
+      obj_for_frame_id('TEXT')
+    end
+
+    def copyright
+      obj_for_frame_id('TCOP')
     end
 
     private
