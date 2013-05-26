@@ -2,20 +2,11 @@ $LOAD_PATH.unshift(File.expand_path('../lib', __FILE__))
 
 require 'easytag/version'
 
-MDOWN_URL = /\[([^\]]+)\]\(([^\)]+)\)/
-def strip_md_links(text)
-  until (match_data=text.match(MDOWN_URL)).nil?
-    text.sub!(match_data[0], match_data[1])
-  end
-
-  text
-end
-
 Gem::Specification.new do |s|
   s.name        = 'easytag'
   s.version     = EasyTag::VERSION
   s.summary     = 'A simple audio metadata tagging interface'
-  s.description = strip_md_links(`cat README.md | head -n 1`).strip
+  s.description = `head -n1 README.md | ./bin/strip_md.rb`
   s.authors     = ['Chris Lucas']
   s.email       = ['chris@chrisjlucas.com']
   s.homepage    = 'https://github.com/cjlucas/ruby-easytag'
