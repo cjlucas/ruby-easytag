@@ -75,10 +75,18 @@ module EasyTag::Interfaces
     def comments
       return @comments unless @comments.nil?
 
-      comm_frame = lookup_frames('COMM').first
-      comm_str = comm_frame ? comm_frame.text : @id3v1.comment
+      @comments = []
+      lookup_frames('COMM').each { |frame| @comments << frame.text }
+      # if no id3v2 comments, try an add an id3v1 comment (if exists)
+      if @comments.empty? && !@id3v1.comment.nil? && !@id3v1.comment.empty?
+        @comments << @id3v1.comment
+      end
 
-      @comments = Base.obj_or_nil(comm_str)
+      @comments
+    end
+
+    def comment
+      comments.first
     end
 
     def year

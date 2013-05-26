@@ -93,7 +93,11 @@ module EasyTag::Interfaces
     end
 
     def comments
-      obj_for_item_key(:cmt, ItemType::STRING)
+      obj_for_item_key(:cmt, ItemType::STRING_LIST) || []
+    end
+
+    def comment
+      comments.first
     end
 
     def lyrics
