@@ -163,8 +163,12 @@ module EasyTag::Interfaces
       obj_for_frame_id('TPUB')
     end
 
-    def encoder
+    def encoded_by
       obj_for_frame_id('TENC')
+    end
+
+    def encoder_settings
+      obj_for_frame_id('TSSE')
     end
 
     def group

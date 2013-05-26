@@ -44,6 +44,7 @@ module EasyTag::Interfaces
       :soar     => 'soar', # Sort Order - Track Artist
       :tmpo     => 'tmpo', # BPM
       :cprt     => 'cprt', # Copyright
+      :enc      => '©enc', # Encoder settings
     }
 
     def initialize(file)
@@ -163,8 +164,12 @@ module EasyTag::Interfaces
       user_info[:label]
     end
 
-    def encoder
+    def encoded_by
       obj_for_item_key(:too, ItemType::STRING)
+    end
+
+    def encoder_settings
+      obj_for_frame_id(:enc, ItemType::STRING)
     end
 
     def group
