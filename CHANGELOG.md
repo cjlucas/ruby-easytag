@@ -10,6 +10,7 @@
   - `#artist_sort_order`
   - `#album_artist_sort_order`
   - `#album_sort_order`
+  - `#original_date`
 * fixed: bug related to M4A files without artwork
 
 ##### v0.1.0 (2013-05-23) #####
