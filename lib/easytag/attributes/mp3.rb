@@ -164,6 +164,23 @@ module EasyTag::Attributes
 
       kv_hash
     end
+
+    def read_date(iface)
+      id3v1 = iface.info.id3v1_tag
+
+      v10_year = id3v1.year.to_s if id3v1.year > 0
+      v23_year = data_from_frame(first_frame_for_id('TYER', iface))
+      v23_date = data_from_frame(first_frame_for_id('TDAT', iface))
+      v24_date = data_from_frame(first_frame_for_id('TDRC', iface))
+
+      # check variables in order of importance
+      date_str = v24_date || v23_year || v10_year
+      # only append v23_date if date_str is currently a year
+      date_str << v23_date unless v23_date.nil? or date_str.length > 4
+      puts "MP3#date: date_str = \"#{date_str}\"" if $DEBUG
+
+      date_str
+    end
   end
 end
 
@@ -387,6 +404,13 @@ module EasyTag::Attributes
     :id3v2_frames => ['APIC'],
     :handler      => :read_all_id3,
     :default      => [],
+  },
+
+  # date
+  {
+    :name         => :date,
+    :handler      => :read_date,
+    :type         => Type::DATETIME,
   },
 
   # year

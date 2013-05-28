@@ -8,42 +8,38 @@ module EasyTag::Interfaces
   class MP3 < Base
     def initialize(file)
       @info = TagLib::MPEG::File.new(file)
-      @id3v1 = @info.id3v1_tag
-      @id3v2 = @info.id3v2_tag
-      
-      # this is required because taglib hash issues with the TDAT/TYER
+
+      add_tdat_to_taglib(file)
+    end
+
+    private
+
+    def add_tdat_to_taglib(file)
+      # this is required because taglib hash issues with the TDAT+TYER
       # frame (https://github.com/taglib/taglib/issues/127)
-      @id3v2_hash = ID3v2.new
+      id3v2_hash = ID3v2.new
 
       File.open(file) do |fp|
         fp.read(3) # read past ID3 identifier
         begin
-          @id3v2_hash.from_io(fp)
+          id3v2_hash.from_io(fp)
         rescue ID3v2Error => e
           warn 'no id3v2 tags found'
         end
       end
 
+      # delete all TDAT frames (taglib-ruby segfaults when trying to read)
+      frames = @info.id3v2_tag.frame_list('TDAT')
+      frames.each { |frame| @info.id3v2_tag.remove_frame(frame) } 
+
+      if id3v2_hash['TDAT']
+        frame = TagLib::ID3v2::TextIdentificationFrame
+          .new('TDAT', TagLib::String::UTF8) 
+
+        frame.text = id3v2_hash['TDAT']
+        @info.id3v2_tag.add_frame(frame)
+      end
     end
-
-    def date
-      return @date unless @date.nil?
-
-      v10_year = @id3v1.year.to_s if @id3v1.year > 0
-      v23_year = obj_for_frame_id('TYER')
-      v23_date = Base.obj_or_nil(@id3v2_hash['TDAT'])
-      v24_date = obj_for_frame_id('TDRC')
-
-      # check variables in order of importance
-      date_str = v24_date || v23_year || v10_year
-      # only append v23_date if date_str is currently a year
-      date_str << v23_date unless v23_date.nil? or date_str.length > 4
-      puts "MP3#date: date_str = \"#{date_str}\"" if $DEBUG
-
-      @date = EasyTag::Utilities.get_datetime(date_str)
-    end
-
-    private
 
     def obj_for_frame_id(frame_id)
       Base.obj_or_nil(lookup_first_field(frame_id))
