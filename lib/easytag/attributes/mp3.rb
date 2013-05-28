@@ -102,10 +102,8 @@ module EasyTag::Attributes
     :name         => :title,
     :id3v2_frames => ['TIT2'],
     :id3v1_tag    => :title,
-    :default      => nil,
     :handler      => :read_v2_frames,
     :type         => Type::STRING,
-    :options      => {},
   },
 
   # title_sort_order
@@ -114,22 +112,14 @@ module EasyTag::Attributes
   {
     :name         => :title_sort_order,
     :id3v2_frames => ['TSOT', 'XSOT'],
-    :id3v1_tag    => nil,
-    :default      => nil,
     :handler      => :read_v2_frames,
-    :type         => nil,
-    :options      => {},
   },
 
   # subtitle
   {
     :name         => :subtitle,
     :id3v2_frames => ['TIT1'],
-    :id3v1_tag    => nil,
-    :default      => nil,
     :handler      => :read_v2_frames,
-    :type         => nil,
-    :options      => {},
   },
 
   # artist
@@ -137,10 +127,7 @@ module EasyTag::Attributes
     :name         => :artist,
     :id3v2_frames => ['TPE1'],
     :id3v1_tag    => :artist,
-    :default      => nil,
     :handler      => :read_v2_frames,
-    :type         => nil,
-    :options      => {},
   },
 
   # artist_sort_order
@@ -149,22 +136,14 @@ module EasyTag::Attributes
   {
     :name         => :artist_sort_order,
     :id3v2_frames => ['TSOP', 'XSOP'],
-    :id3v1_tag    => nil,
-    :default      => nil,
     :handler      => :read_v2_frames,
-    :type         => nil,
-    :options      => {},
   },
 
   # album_artist
   {
     :name         => :album_artist,
     :id3v2_frames => ['TPE2'],
-    :id3v1_tag    => nil,
-    :default      => nil,
     :handler      => :read_v2_frames,
-    :type         => nil,
-    :options      => {},
   },
 
   # album
@@ -172,20 +151,15 @@ module EasyTag::Attributes
     :name         => :album,
     :id3v2_frames => ['TALB'],
     :id3v1_tag    => :album,
-    :default      => nil,
     :handler      => :read_v2_frames,
-    :type         => nil,
-    :options      => {},
   },
 
   # compilation?
   {
     :name         => :compilation?,
     :id3v2_frames => ['TCMP'],
-    :id3v1_tag    => nil,
     :default      => false,
     :handler      => :read_v2_frames,
-    :type         => nil,
     :options      => {:is_flag => true},
   },
 
@@ -195,11 +169,7 @@ module EasyTag::Attributes
   {
     :name         => :album_sort_order,
     :id3v2_frames => ['TSOA', 'XSOA'],
-    :id3v1_tag    => nil,
-    :default      => nil,
     :handler      => :read_v2_frames,
-    :type         => nil,
-    :options      => {},
   },
   
   # genre
@@ -207,120 +177,77 @@ module EasyTag::Attributes
     :name         => :genre,
     :id3v2_frames => ['TCON'],
     :id3v1_tag    => :genre,
-    :default      => nil,
     :handler      => :read_v2_frames,
-    :type         => nil,
-    :options      => {},
   },
 
   # disc_subtitle
   {
     :name         => :disc_subtitle,
     :id3v2_frames => ['TSST'],
-    :id3v1_tag    => nil,
-    :default      => nil,
     :handler      => :read_v2_frames,
-    :type         => nil,
-    :options      => {},
   },
 
   # media
   {
     :name         => :media,
     :id3v2_frames => ['TMED'],
-    :id3v1_tag    => nil,
-    :default      => nil,
     :handler      => :read_v2_frames,
-    :type         => nil,
-    :options      => {},
   },
 
   # label
   {
     :name         => :label,
     :id3v2_frames => ['TPUB'],
-    :id3v1_tag    => nil,
-    :default      => nil,
     :handler      => :read_v2_frames,
-    :type         => nil,
-    :options      => {},
   },
 
   # encoded_by
   {
     :name         => :encoded_by,
     :id3v2_frames => ['TENC'],
-    :id3v1_tag    => nil,
-    :default      => nil,
     :handler      => :read_v2_frames,
-    :type         => nil,
-    :options      => {},
   },
 
   # encoder_settings
   {
     :name         => :encoder_settings,
     :id3v2_frames => ['TSSE'],
-    :id3v1_tag    => nil,
-    :default      => nil,
     :handler      => :read_v2_frames,
-    :type         => nil,
-    :options      => {},
   },
 
   # group
   {
     :name         => :group,
     :id3v2_frames => ['TIT1'],
-    :id3v1_tag    => nil,
-    :default      => nil,
     :handler      => :read_v2_frames,
-    :type         => nil,
-    :options      => {},
   },
 
   # composer
   {
     :name         => :composer,
     :id3v2_frames => ['TCOM'],
-    :id3v1_tag    => nil,
-    :default      => nil,
     :handler      => :read_v2_frames,
-    :type         => nil,
-    :options      => {},
   },
 
   # lyrics
   {
     :name         => :lyrics,
     :id3v2_frames => ['USLT'],
-    :id3v1_tag    => nil,
-    :default      => nil,
     :handler      => :read_v2_frames,
-    :type         => nil,
-    :options      => {},
   },
 
   # lyricist
   {
     :name         => :lyricist,
     :id3v2_frames => ['TEXT'],
-    :id3v1_tag    => nil,
-    :default      => nil,
     :handler      => :read_v2_frames,
-    :type         => nil,
-    :options      => {},
   },
 
   # copyright
   {
     :name         => :copyright,
     :id3v2_frames => ['TCOP'],
-    :id3v1_tag    => nil,
-    :default      => nil,
     :handler      => :read_v2_frames,
-    :type         => nil,
-    :options      => {},
   },
 
   # bpm
