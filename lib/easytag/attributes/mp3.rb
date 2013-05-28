@@ -13,10 +13,15 @@ module EasyTag::Attributes
       @id3v2_frames = args[:id3v2_frames] || []
       @id3v1_tag    = args[:id3v1_tag] || nil
       @default      = args[:default]
-      @handler      = method(args[:handler])
       @type         = args[:type] || Type::STRING
       @options      = args[:options] || {}
       @ivar         = BaseAttribute.name_to_ivar(@name)
+
+      if args[:handler].is_a?(Symbol)
+        @handler = method(args[:handler])
+      elsif args[:handler].is_a?(Proc)
+        @handler = args[:handler]
+      end
 
       # fill default options
     
@@ -27,9 +32,9 @@ module EasyTag::Attributes
       @options[:compact] ||= false
     end
 
-    def call(taglib)
+    def call(iface)
       #puts 'entered call()'
-      data = @handler.call(taglib)
+      data = @handler.call(iface)
       data = type_cast(data)
       post_process(data)
     end
@@ -63,12 +68,12 @@ module EasyTag::Attributes
       data
     end
 
-    def frames_for_id(id, taglib)
-      taglib.id3v2_tag.frame_list(id)
+    def frames_for_id(id, iface)
+      iface.info.id3v2_tag.frame_list(id)
     end
 
-    def first_frame_for_id(id, taglib)
-      frames_for_id(id, taglib).first
+    def first_frame_for_id(id, iface)
+      frames_for_id(id, iface).first
     end
 
     def data_from_frame(frame)
@@ -99,16 +104,16 @@ module EasyTag::Attributes
     #
     # gets data from each frame id given
     # only falls back to the id3v1 tag if none found
-    def read_all_id3(taglib)
+    def read_all_id3(iface)
       frames = []
       @id3v2_frames.each do |f| 
-        frames += frames_for_id(f, taglib)
+        frames += frames_for_id(f, iface)
       end
 
       data = []
       # only check id3v1 if no id3v2 frames found
       if frames.empty?
-        data << taglib.id3v1_tag.send(@id3v1_tag) unless @id3v1_tag.nil?
+        data << iface.info.id3v1_tag.send(@id3v1_tag) unless @id3v1_tag.nil?
       else
         frames.each { |frame| data << data_from_frame(frame) }
       end
@@ -119,14 +124,14 @@ module EasyTag::Attributes
     # read_first_id3
     #
     # Similar to read_all_id3, but optimized for reading only one frame at max
-    def read_first_id3(taglib)
+    def read_first_id3(iface)
       frame = nil
       @id3v2_frames.each do |f|
-        frame = first_frame_for_id(f, taglib) if frame.nil?
+        frame = first_frame_for_id(f, iface) if frame.nil?
       end
 
       if frame.nil?
-        data = taglib.id3v1_tag.send(@id3v1_tag) unless @id3v1_tag.nil?
+        data = iface.info.id3v1_tag.send(@id3v1_tag) unless @id3v1_tag.nil?
       else
         data = data_from_frame(frame)
       end
@@ -135,8 +140,8 @@ module EasyTag::Attributes
     end
 
 
-    def read_int_pair(taglib)
-      int_pair_str = read_first_id3(taglib).to_s
+    def read_int_pair(iface)
+      int_pair_str = read_first_id3(iface).to_s
       EasyTag::Utilities.get_int_pair(int_pair_str)
     end
   end
@@ -347,10 +352,9 @@ module EasyTag::Attributes
   # comment
   {
     :name         => :comment,
-    :id3v2_frames => ['COMM'],
-    :id3v1_tag    => :comment,
-    :handler      => :read_first_id3,
+    :handler      => lambda { |iface| iface.comments.first }
   },
+  
 
   # album_art
   {

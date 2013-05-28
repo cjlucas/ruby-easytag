@@ -85,7 +85,7 @@ module EasyTag::Interfaces
       attrib = EasyTag::Attributes::MP3Attribute.new(attrib_args)
       define_method(attrib.name) do
         instance_variable_get(attrib.ivar) || 
-          instance_variable_set(attrib.ivar, attrib.call(@info))
+          instance_variable_set(attrib.ivar, attrib.call(self))
       end
     end
 
