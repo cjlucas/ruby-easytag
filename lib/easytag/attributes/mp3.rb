@@ -1,5 +1,6 @@
 require 'taglib'
 
+require 'easytag/image'
 require 'easytag/util'
 require 'easytag/attributes/base'
 
@@ -22,9 +23,12 @@ module EasyTag::Attributes
       # ID3 stores boolean values as numeric strings
       #   set to true to enable type casting 
       @options[:is_flag] ||= false
+      # Remove nil objects from array
+      @options[:compact] ||= false
     end
 
     def call(taglib)
+      #puts 'entered call()'
       data = @handler.call(taglib)
       data = type_cast(data)
       post_process(data)
@@ -47,7 +51,16 @@ module EasyTag::Attributes
       end
 
       # fall back to default if data is nil
-      BaseAttribute.obj_or_nil(data) || @default
+      data = BaseAttribute.obj_or_nil(data) || @default
+
+      # run obj_or_nil on each item in array
+      data.map! { |item| BaseAttribute.obj_or_nil(item) } if data.is_a?(Array)
+
+      if @options[:compact] && data.respond_to?(:compact!)
+        data.compact!
+      end
+
+      data
     end
 
     def frames_for_id(id, taglib)
@@ -60,10 +73,19 @@ module EasyTag::Attributes
 
     def data_from_frame(frame)
       data = nil
-      if frame.class == TagLib::ID3v2::TextIdentificationFrame
+      if frame.is_a?(TagLib::ID3v2::TextIdentificationFrame)
         data = frame.field_list.first
-      elsif frame.class == TagLib::ID3v2::UnsynchronizedLyricsFrame
+      elsif frame.is_a?(TagLib::ID3v2::UnsynchronizedLyricsFrame)
         data = frame.text
+      elsif frame.is_a?(TagLib::ID3v2::CommentsFrame)
+        data = frame.text
+      elsif frame.is_a?(TagLib::ID3v2::AttachedPictureFrame)
+        data = EasyTag::Image.new(frame.picture)
+        data.desc = frame.description
+        data.type = frame.type
+        data.mime_type = frame.mime_type
+      else
+        warn 'no defined frames match the given frame'
       end
 
       data
@@ -73,9 +95,33 @@ module EasyTag::Attributes
     # read handlers
     #
     
-    def read_v2_frames(taglib)
-      frame = nil
+    # read_all_id3
+    #
+    # gets data from each frame id given
+    # only falls back to the id3v1 tag if none found
+    def read_all_id3(taglib)
+      frames = []
       @id3v2_frames.each do |f| 
+        frames += frames_for_id(f, taglib)
+      end
+
+      data = []
+      # only check id3v1 if no id3v2 frames found
+      if frames.empty?
+        data << taglib.id3v1_tag.send(@id3v1_tag) unless @id3v1_tag.nil?
+      else
+        frames.each { |frame| data << data_from_frame(frame) }
+      end
+
+      data
+    end
+
+    # read_first_id3
+    #
+    # Similar to read_all_id3, but optimized for reading only one frame at max
+    def read_first_id3(taglib)
+      frame = nil
+      @id3v2_frames.each do |f|
         frame = first_frame_for_id(f, taglib) if frame.nil?
       end
 
@@ -83,13 +129,14 @@ module EasyTag::Attributes
         data = taglib.id3v1_tag.send(@id3v1_tag) unless @id3v1_tag.nil?
       else
         data = data_from_frame(frame)
-
-        data
       end
+
+      data
     end
 
+
     def read_int_pair(taglib)
-      int_pair_str = read_v2_frames(taglib).to_s
+      int_pair_str = read_first_id3(taglib).to_s
       EasyTag::Utilities.get_int_pair(int_pair_str)
     end
   end
@@ -102,7 +149,7 @@ module EasyTag::Attributes
     :name         => :title,
     :id3v2_frames => ['TIT2'],
     :id3v1_tag    => :title,
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
     :type         => Type::STRING,
   },
 
@@ -112,14 +159,14 @@ module EasyTag::Attributes
   {
     :name         => :title_sort_order,
     :id3v2_frames => ['TSOT', 'XSOT'],
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
   },
 
   # subtitle
   {
     :name         => :subtitle,
     :id3v2_frames => ['TIT1'],
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
   },
 
   # artist
@@ -127,7 +174,7 @@ module EasyTag::Attributes
     :name         => :artist,
     :id3v2_frames => ['TPE1'],
     :id3v1_tag    => :artist,
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
   },
 
   # artist_sort_order
@@ -136,14 +183,14 @@ module EasyTag::Attributes
   {
     :name         => :artist_sort_order,
     :id3v2_frames => ['TSOP', 'XSOP'],
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
   },
 
   # album_artist
   {
     :name         => :album_artist,
     :id3v2_frames => ['TPE2'],
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
   },
 
   # album
@@ -151,7 +198,7 @@ module EasyTag::Attributes
     :name         => :album,
     :id3v2_frames => ['TALB'],
     :id3v1_tag    => :album,
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
   },
 
   # compilation?
@@ -159,7 +206,7 @@ module EasyTag::Attributes
     :name         => :compilation?,
     :id3v2_frames => ['TCMP'],
     :default      => false,
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
     :options      => {:is_flag => true},
   },
 
@@ -169,7 +216,7 @@ module EasyTag::Attributes
   {
     :name         => :album_sort_order,
     :id3v2_frames => ['TSOA', 'XSOA'],
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
   },
   
   # genre
@@ -177,84 +224,84 @@ module EasyTag::Attributes
     :name         => :genre,
     :id3v2_frames => ['TCON'],
     :id3v1_tag    => :genre,
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
   },
 
   # disc_subtitle
   {
     :name         => :disc_subtitle,
     :id3v2_frames => ['TSST'],
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
   },
 
   # media
   {
     :name         => :media,
     :id3v2_frames => ['TMED'],
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
   },
 
   # label
   {
     :name         => :label,
     :id3v2_frames => ['TPUB'],
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
   },
 
   # encoded_by
   {
     :name         => :encoded_by,
     :id3v2_frames => ['TENC'],
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
   },
 
   # encoder_settings
   {
     :name         => :encoder_settings,
     :id3v2_frames => ['TSSE'],
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
   },
 
   # group
   {
     :name         => :group,
     :id3v2_frames => ['TIT1'],
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
   },
 
   # composer
   {
     :name         => :composer,
     :id3v2_frames => ['TCOM'],
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
   },
 
   # lyrics
   {
     :name         => :lyrics,
     :id3v2_frames => ['USLT'],
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
   },
 
   # lyricist
   {
     :name         => :lyricist,
     :id3v2_frames => ['TEXT'],
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
   },
 
   # copyright
   {
     :name         => :copyright,
     :id3v2_frames => ['TCOP'],
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
   },
 
   # bpm
   {
     :name         => :bpm,
     :id3v2_frames => ['TBPM'],
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
     :type         => Type::INT,
   },
 
@@ -283,8 +330,34 @@ module EasyTag::Attributes
   {
     :name         => :original_date,
     :id3v2_frames => ['TDOR', 'TORY'],
-    :handler      => :read_v2_frames,
+    :handler      => :read_first_id3,
     :type         => Type::DATETIME,
+  },
+
+  # comments
+  {
+    :name         => :comments,
+    :id3v2_frames => ['COMM'],
+    :id3v1_tag    => :comment,
+    :handler      => :read_all_id3,
+    :default      => [],
+    :options      => { :compact => true }
+  },
+  
+  # comment
+  {
+    :name         => :comment,
+    :id3v2_frames => ['COMM'],
+    :id3v1_tag    => :comment,
+    :handler      => :read_first_id3,
+  },
+
+  # album_art
+  {
+    :name         => :album_art,
+    :id3v2_frames => ['APIC'],
+    :handler      => :read_all_id3,
+    :default      => [],
   },
   ]
 end

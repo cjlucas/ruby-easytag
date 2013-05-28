@@ -30,23 +30,6 @@ module EasyTag::Interfaces
       user_info[:albumartistsort]
     end
 
-    def comments
-      return @comments unless @comments.nil?
-
-      @comments = []
-      lookup_frames('COMM').each { |frame| @comments << frame.text }
-      # if no id3v2 comments, try an add an id3v1 comment (if exists)
-      if @comments.empty? && !@id3v1.comment.nil? && !@id3v1.comment.empty?
-        @comments << @id3v1.comment
-      end
-
-      @comments
-    end
-
-    def comment
-      comments.first
-    end
-
     def year
       date.nil? ? 0 : date.year
     end
@@ -68,22 +51,6 @@ module EasyTag::Interfaces
       @date = EasyTag::Utilities.get_datetime(date_str)
     end
 
-    def album_art
-      return @album_art unless @album_art.nil?
-
-      @album_art = []
-      @id3v2.frame_list('APIC').each do |apic|
-        img           = EasyTag::Image.new(apic.picture)
-        img.desc      = apic.description
-        img.type      = apic.type
-        img.mime_type = apic.mime_type
-
-        @album_art << img
-      end
-
-      @album_art
-    end
-
     def user_info
       return @user_info unless @user_info.nil?
 
@@ -98,12 +65,6 @@ module EasyTag::Interfaces
     end
 
     private
-
-    # for TPOS and TRCK
-    def int_pair_for_frame_id(frame_id)
-      str = obj_for_frame_id(frame_id)
-      EasyTag::Utilities.get_int_pair(str)
-    end
 
     def obj_for_frame_id(frame_id)
       Base.obj_or_nil(lookup_first_field(frame_id))
