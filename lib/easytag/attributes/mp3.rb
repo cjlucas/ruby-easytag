@@ -26,10 +26,16 @@ module EasyTag::Attributes
       # fill default options
     
       # ID3 stores boolean values as numeric strings
-      #   set to true to enable type casting 
-      @options[:is_flag] ||= false
-      # Remove nil objects from array
-      @options[:compact] ||= false
+      #   set to true to enable type casting  (post process)
+      @options[:is_flag]    ||= false
+      # Remove nil objects from array (post process)
+      @options[:compact]    ||= false
+      # normalizes key (if hash) (handler)
+      @options[:normalize]  ||= false
+      # cast key (if hash) to symbol (handler)
+      @options[:to_sym]     ||= false
+      # return entire field list instead of first item in field list
+      @options[:field_list] ||= false
     end
 
     def call(iface)
@@ -79,7 +85,8 @@ module EasyTag::Attributes
     def data_from_frame(frame)
       data = nil
       if frame.is_a?(TagLib::ID3v2::TextIdentificationFrame)
-        data = frame.field_list.first
+        field_list = frame.field_list
+        data = @options[:field_list] ? field_list : field_list.first
       elsif frame.is_a?(TagLib::ID3v2::UnsynchronizedLyricsFrame)
         data = frame.text
       elsif frame.is_a?(TagLib::ID3v2::CommentsFrame)
@@ -139,10 +146,23 @@ module EasyTag::Attributes
       data
     end
 
-
     def read_int_pair(iface)
       int_pair_str = read_first_id3(iface).to_s
       EasyTag::Utilities.get_int_pair(int_pair_str)
+    end
+
+    def read_field_list_as_key_value(iface)
+      kv_hash = {}
+      frame_data = read_all_id3(iface)
+
+      frame_data.each do |data|
+        key, value = data
+        key = EasyTag::Utilities.normalize_string(key) if @options[:normalize]
+        key = key.to_sym if @options[:to_sym]
+        kv_hash[key] = value
+      end
+
+      kv_hash
     end
   end
 end
@@ -196,6 +216,12 @@ module EasyTag::Attributes
     :name         => :album_artist,
     :id3v2_frames => ['TPE2'],
     :handler      => :read_first_id3,
+  },
+
+  # album_artist_sort_order
+  {
+    :name         => :album_artist_sort_order,
+    :handler      => lambda { |iface| iface.user_info[:albumartistsort] }
   },
 
   # album
@@ -354,7 +380,6 @@ module EasyTag::Attributes
     :name         => :comment,
     :handler      => lambda { |iface| iface.comments.first }
   },
-  
 
   # album_art
   {
@@ -362,6 +387,23 @@ module EasyTag::Attributes
     :id3v2_frames => ['APIC'],
     :handler      => :read_all_id3,
     :default      => [],
+  },
+
+  # year
+  {
+    :name         => :year,
+    :handler      => lambda { |iface| iface.date.nil? ? 0 : iface.date.year }
+  },
+
+  # user_info
+  {
+    :name         => :user_info_new,
+    :id3v2_frames => ['TXXX'],
+    :handler      => :read_field_list_as_key_value,
+    :default      => {},
+    :options     => { :normalize => true, 
+      :to_sym => true,
+      :field_list => true },
   },
   ]
 end
