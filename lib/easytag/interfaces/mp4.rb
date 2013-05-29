@@ -1,5 +1,7 @@
 # encoding: UTF-8
 
+require 'easytag/attributes/mp4'
+
 module EasyTag::Interfaces
   class MP4 < Base
     # type of TagLib::MP4::Item
@@ -50,10 +52,6 @@ module EasyTag::Interfaces
     def initialize(file)
       @info = TagLib::MP4::File.new(file)
       @tag = @info.tag
-    end
-
-    def title
-      obj_for_item_key(:nam, ItemType::STRING)
     end
 
     def title_sort_order
@@ -115,18 +113,6 @@ module EasyTag::Interfaces
 
       date_str = obj_for_item_key(:day, ItemType::STRING)
       @date ||= EasyTag::Utilities.get_datetime(date_str)
-    end
-
-    def album_art
-      return @album_art unless @album_art.nil?
-
-      @album_art = []
-      covers = obj_for_item_key(:covr, ItemType::COVER_ART_LIST) || []
-      covers.each do |cover|
-        @album_art << EasyTag::Image.new(cover.data)
-      end
-
-      @album_art
     end
 
     def apple_id
@@ -234,5 +220,14 @@ module EasyTag::Interfaces
 
       Base.obj_or_nil(o)
     end
+
+    EasyTag::Attributes::MP4_ATTRIB_ARGS.each do |attrib_args|
+      attrib = EasyTag::Attributes::MP4Attribute.new(attrib_args)
+      define_method(attrib.name) do
+        instance_variable_get(attrib.ivar) || 
+          instance_variable_set(attrib.ivar, attrib.call(self))
+      end
+    end
+
   end
 end

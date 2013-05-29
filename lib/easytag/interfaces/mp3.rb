@@ -41,21 +41,6 @@ module EasyTag::Interfaces
       end
     end
 
-    def obj_for_frame_id(frame_id)
-      Base.obj_or_nil(lookup_first_field(frame_id))
-    end
-
-    def lookup_frames(frame_id)
-      frames = @id3v2.frame_list(frame_id)
-    end
-
-    # get the first field in the first frame
-    def lookup_first_field(frame_id)
-      frame = lookup_frames(frame_id).first
-      warn "frame '#{frame_id}' is not present" if frame.nil?
-      frame.field_list.first unless frame.nil?
-    end
-
     EasyTag::Attributes::MP3_ATTRIB_ARGS.each do |attrib_args|
       attrib = EasyTag::Attributes::MP3Attribute.new(attrib_args)
       define_method(attrib.name) do
