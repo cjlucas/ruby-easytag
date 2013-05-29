@@ -58,7 +58,8 @@ module EasyTag::Attributes
       end
 
       # fall back to default if data is nil
-      data = BaseAttribute.obj_or_nil(data) || @default.dup
+      data = BaseAttribute.obj_or_nil(data)
+      data = @default.dup if data.nil? unless @default.nil?
 
       # run obj_or_nil on each item in array
       data.map! { |item| BaseAttribute.obj_or_nil(item) } if data.is_a?(Array)
