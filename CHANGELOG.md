@@ -1,10 +1,20 @@
-##### v0.3.0 (Not yet released) #####
+##### v0.3.0 (2013-05-29) #####
 * added:
-  - `#encoder`
+  - `#encoded_by`
+  - `#encoder_settings`
   - `#group`
   - `#composer`
   - `#lyrics`
   - `#compilation?`
+  - `#subtitle`
+  - `#bpm`
+  - `#lyricist`
+  - `#copyright`
+  - `#comment`
+
+* changed:
+  - `#comments` now returns an array, `#comment` is the
+    equivalent of the old behavior
 
 ##### v0.2.0 (2013-05-25) #####
 * added:
