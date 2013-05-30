@@ -10,17 +10,17 @@ class TestID3v1OnlyMP3 < Test::Unit::TestCase
   end
 
   def test_tags
-    assert_equal('Track Title',       @f.title)
-    assert_equal('Track Artist',      @f.artist)
-    assert_equal('Album Name',        @f.album)
-    assert_equal('this is a comment', @f.comments)
-    assert_equal('Swing',             @f.genre)
-    assert_equal(1988,                @f.year)
-    assert_equal(1988,                @f.date.year)
-    assert_equal(true,                @f.album_art.empty?)
-    assert_equal(nil,                 @f.apple_id)
-    assert_equal([3, 0],              @f.track_num)
-    assert_equal([0, 0],              @f.disc_num)
+    assert_equal('Track Title',         @f.title)
+    assert_equal('Track Artist',        @f.artist)
+    assert_equal('Album Name',          @f.album)
+    assert_equal(['this is a comment'], @f.comments)
+    assert_equal('Swing',               @f.genre)
+    assert_equal(1988,                  @f.year)
+    assert_equal(1988,                  @f.date.year)
+    assert_equal(true,                  @f.album_art.empty?)
+    assert_equal(nil,                   @f.apple_id)
+    assert_equal([3, 0],                @f.track_num)
+    assert_equal([0, 0],                @f.disc_num)
 
   end
 end
@@ -34,7 +34,7 @@ class TestID3v2OnlyMP3 < Test::Unit::TestCase
     assert_equal('Track Title',       @f.title)
     assert_equal('Track Artist',      @f.artist)
     assert_equal('Album Name',        @f.album)
-    assert_equal('this is a comment', @f.comments)
+    assert_equal('this is a comment', @f.comment)
     assert_equal('Swing',             @f.genre)
     assert_equal(1988,                @f.year)
     assert_equal(1988,                @f.date.year)
@@ -56,7 +56,7 @@ class TestNoTagsMP3 < Test::Unit::TestCase
     assert_equal(nil,  @f.artist)
     assert_equal(nil,  @f.album)
     assert_equal(nil,  @f.album_artist)
-    assert_equal(nil,  @f.comments)
+    assert_equal([],  @f.comments)
     assert_equal(nil,  @f.genre)
     assert_equal(0,    @f.year)
     assert_equal(nil,  @f.date)

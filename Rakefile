@@ -19,5 +19,9 @@ task :build do
 end
 
 task :release => :build do
-  system 'gem push easytag-#{EasyTag::VERSION}.gem'
+  system "gem push easytag-#{EasyTag::VERSION}.gem"
+end
+
+task :clean do
+  system 'rm -f *.gem'
 end

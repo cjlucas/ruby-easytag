@@ -31,6 +31,11 @@ class TestUtilities < Test::Unit::TestCase
     assert_equal(7, date.day)
   end
 
+  def test_get_datetime04
+    date = EasyTag::Utilities.get_datetime('')
+    assert_equal(nil, date)
+  end
+
   def test_get_int_pair
     assert_equal([0, 0],  EasyTag::Utilities.get_int_pair(''))
     assert_equal([0, 0],  EasyTag::Utilities.get_int_pair(nil))

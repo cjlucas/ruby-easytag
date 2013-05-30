@@ -14,7 +14,7 @@ class TestNoTagsMP4 < Test::Unit::TestCase
     assert_equal(nil,    @f.artist)
     assert_equal(nil,    @f.album)
     assert_equal(nil,    @f.album_artist)
-    assert_equal(nil,    @f.comments)
+    assert_equal([],     @f.comments)
     assert_equal(nil,    @f.genre)
     assert_equal(0,      @f.year)
     assert_equal(nil,    @f.date)

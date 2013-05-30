@@ -15,11 +15,13 @@ class TestConsistencyMP301 < Test::Unit::TestCase
     assert_equal('Artist Name Here',    @mp3.artist)
     assert_equal('Album Artist Here',   @mp3.album_artist)
     assert_equal('Album Name Here',     @mp3.album)
-    assert_equal('This is my comment.', @mp3.comments)
+    assert_equal('This is my comment.', @mp3.comment)
     assert_equal('Polka',               @mp3.genre)
     assert_equal(1941,                  @mp3.year)
     assert_equal([5, 0],                @mp3.track_num)
     assert_equal([3, 0],                @mp3.disc_num)
+    assert_equal(false,                 @mp3.compilation?)
+    assert_equal(0,                     @mp3.bpm)
   end
 
   def test_date
@@ -95,7 +97,7 @@ class TestConsistencyMP302 < Test::Unit::TestCase
       #[nil,                             @mp3.album_artist_sort_order],
       ['Speakerboxxx / The Love Below', @mp3.album],
       [nil,                             @mp3.album_sort_order],
-      [nil,                             @mp3.comments],
+      [[],                             @mp3.comments],
       [nil,                             @mp3.genre],
       [2003,                            @mp3.year],
       [[8, 21],                         @mp3.track_num],
@@ -103,6 +105,8 @@ class TestConsistencyMP302 < Test::Unit::TestCase
       ['The Love Below',                @mp3.disc_subtitle],
       ['CD',                            @mp3.media],
       ['Arista',                        @mp3.label],
+      [true,                            @mp3.compilation?],
+      [0,                               @mp3.bpm],
     ]
 
     cases.each do |c|
@@ -157,6 +161,8 @@ class TestConsistency02 < Test::Unit::TestCase
       :disc_subtitle,
       :media,
       :label,
+      :compilation?,
+      :bpm,
     ]
 
     cases.each do |c|
