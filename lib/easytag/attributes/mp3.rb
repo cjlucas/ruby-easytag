@@ -9,70 +9,19 @@ module EasyTag::Attributes
     attr_reader :name, :ivar
     
     def initialize(args)
-      @name         = args[:name]
+      super(args)
       @id3v2_frames = args[:id3v2_frames] || []
       @id3v1_tag    = args[:id3v1_tag] || nil
-      @default      = args[:default]
-      @type         = args[:type] || Type::STRING
-      @options      = args[:options] || {}
-      @ivar         = BaseAttribute.name_to_ivar(@name)
-
-      if args[:handler].is_a?(Symbol)
-        @handler = method(args[:handler])
-      elsif args[:handler].is_a?(Proc)
-        @handler = args[:handler]
-      end
 
       # fill default options
     
       # ID3 stores boolean values as numeric strings
       #   set to true to enable type casting  (post process)
       @options[:is_flag]    ||= false
-      # Remove nil objects from array (post process)
-      @options[:compact]    ||= false
-      # normalizes key (if hash) (handler)
-      @options[:normalize]  ||= false
-      # cast key (if hash) to symbol (handler)
-      @options[:to_sym]     ||= false
       # return entire field list instead of first item in field list
       @options[:field_list] ||= false
     end
 
-    def call(iface)
-      #puts 'entered call()'
-      data = @handler.call(iface)
-      data = type_cast(data)
-      post_process(data)
-    end
-
-    def type_cast(data)
-      case @type
-      when Type::INT
-        data = data.to_i
-      when Type::DATETIME
-        data = EasyTag::Utilities.get_datetime(data.to_s)
-      end
-      
-      data
-    end
-
-    def post_process(data)
-      if @options[:is_flag]
-        data = data.to_i == 1 ? true : false
-      end
-
-      # fall back to default if data is nil
-      data = BaseAttribute.obj_or_nil(data) || @default
-
-      # run obj_or_nil on each item in array
-      data.map! { |item| BaseAttribute.obj_or_nil(item) } if data.is_a?(Array)
-
-      if @options[:compact] && data.respond_to?(:compact!)
-        data.compact!
-      end
-
-      data
-    end
 
     def frames_for_id(id, iface)
       iface.info.id3v2_tag.frame_list(id)
@@ -157,7 +106,7 @@ module EasyTag::Attributes
 
       frame_data.each do |data|
         key, value = data
-        key = EasyTag::Utilities.normalize_string(key) if @options[:normalize]
+        key = Utilities.normalize_string(key) if @options[:normalize]
         key = key.to_sym if @options[:to_sym]
         kv_hash[key] = value
       end

@@ -10,6 +10,8 @@ module EasyTag::Attributes
     DATETIME    = 6
   end
   class BaseAttribute
+    Utilities = EasyTag::Utilities
+
     def initialize(args)
       @name = args[:name]
       @default = args[:default]
@@ -59,7 +61,7 @@ module EasyTag::Attributes
       when Type::INT
         data = data.to_i
       when Type::DATETIME
-        data = EasyTag::Utilities.get_datetime(data.to_s)
+        data = Utilities.get_datetime(data.to_s)
       end
       
       data
