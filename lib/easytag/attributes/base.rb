@@ -34,6 +34,19 @@ module EasyTag::Attributes
 
     end
     
+    def self.can_clone?(obj)
+      obj.is_a?(String) || obj.is_a?(Array) || obj.is_a?(Hash)
+    end
+
+    def self.deep_copy(obj)
+      Marshal.load(Marshal.dump(obj))
+    end
+
+    def default
+      BaseAttribute.can_clone?(@default) ?
+        BaseAttribute.deep_copy(@default) : @default
+    end
+    
     def call(iface)
       #puts 'entered call()'
       data = @handler.call(iface)
@@ -58,8 +71,7 @@ module EasyTag::Attributes
       end
 
       # fall back to default if data is nil
-      data = BaseAttribute.obj_or_nil(data)
-      data = @default.dup if data.nil? unless @default.nil?
+      data = BaseAttribute.obj_or_nil(data) || default
 
       # run obj_or_nil on each item in array
       data.map! { |item| BaseAttribute.obj_or_nil(item) } if data.is_a?(Array)
