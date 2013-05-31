@@ -1,3 +1,7 @@
+##### v0.3.1 (2013-05-31) #####
+* fixed: `MP3#subtitle` now points to correct ID3 frame
+* fixed: restored `MP3#user_info`
+
 ##### v0.3.0 (2013-05-29) #####
 * added:
   - `#encoded_by`
@@ -11,10 +15,8 @@
   - `#lyricist`
   - `#copyright`
   - `#comment`
-
-* changed:
-  - `#comments` now returns an array, `#comment` is the
-    equivalent of the old behavior
+* changed: `#comments` now returns an array, `#comment` is the
+  equivalent of the old behavior
 
 ##### v0.2.0 (2013-05-25) #####
 * added:
