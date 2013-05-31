@@ -156,7 +156,7 @@ module EasyTag::Attributes
   # subtitle
   {
     :name         => :subtitle,
-    :id3v2_frames => ['TIT1'],
+    :id3v2_frames => ['TIT3'],
     :handler      => :read_first_id3,
   },
 
