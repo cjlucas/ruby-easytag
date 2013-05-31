@@ -370,7 +370,7 @@ module EasyTag::Attributes
 
   # user_info
   {
-    :name         => :user_info_new,
+    :name         => :user_info,
     :id3v2_frames => ['TXXX'],
     :handler      => :read_field_list_as_key_value,
     :default      => {},
