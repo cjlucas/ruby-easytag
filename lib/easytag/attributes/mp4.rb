@@ -342,5 +342,13 @@ module EasyTag::Attributes
     :type       => Type::STRING,
   },
 
+  # asin
+  {
+    :name         => :asin,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :asin},
+    :type         => Type::STRING,
+  },
+
   ]
 end
