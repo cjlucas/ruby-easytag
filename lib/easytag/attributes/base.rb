@@ -8,6 +8,7 @@ module EasyTag::Attributes
     STRING_LIST = 4
     BOOLEAN     = 5
     DATETIME    = 6
+    LIST        = 7
   end
   class BaseAttribute
     Utilities = EasyTag::Utilities
@@ -35,9 +36,9 @@ module EasyTag::Attributes
       @options[:compact]        ||= false
       # Delete empty objects in array (post process)
       @options[:delete_empty]   ||= false
-      # normalizes key (if hash) (handler)
+      # normalizes key (if hash) (handler or post process)
       @options[:normalize]      ||= false
-      # cast key (if hash) to symbol (handler)
+      # cast key (if hash) to symbol (handler or post process)
       @options[:to_sym]         ||= false
 
     end
@@ -62,6 +63,8 @@ module EasyTag::Attributes
         [0, 0] # TODO: don't assume an INT_LIST is always an int pair
       when Type::BOOLEAN
         false
+      when Type::LIST
+        []
       end
     end
 
@@ -82,6 +85,8 @@ module EasyTag::Attributes
         data = data.to_i
       when Type::DATETIME
         data = Utilities.get_datetime(data.to_s)
+      when Type::LIST
+        data = Array(data)
       end
       
       data
@@ -101,6 +106,13 @@ module EasyTag::Attributes
 
       if @options[:delete_empty]
         data.select! { |item| !item.empty? if item.respond_to?(:empty?) }
+      end
+
+      data = Utilities.normalize_object(data) if @options[:normalize]
+
+      # TODO: roll this out to a method that supports more than just array
+      if @options[:to_sym] && data.is_a?(Array)
+        data.map! { |item| item.to_sym if item.respond_to?(:to_sym) }
       end
 
       data

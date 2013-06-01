@@ -350,5 +350,69 @@ module EasyTag::Attributes
     :type         => Type::STRING,
   },
 
+  # musicbrainz_track_id
+  {
+    :name         => :musicbrainz_track_id,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_track_id},
+    :type         => Type::STRING,
+  },
+
+  # musicbrainz_album_artist_id
+  {
+    :name         => :musicbrainz_album_artist_id,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_album_artist_id},
+    :type         => Type::STRING,
+  },
+
+  # musicbrainz_artist_id
+  {
+    :name         => :musicbrainz_artist_id,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_artist_id},
+    :type         => Type::LIST,
+  },
+  
+  # musicbrainz_album_id
+  {
+    :name         => :musicbrainz_album_id,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_album_id},
+    :type         => Type::STRING,
+  },
+  
+  # musicbrainz_album_status
+  {
+    :name         => :musicbrainz_album_status,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_album_status},
+    :type         => Type::STRING,
+  },
+  
+  # musicbrainz_album_type
+  {
+    :name         => :musicbrainz_album_type,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_album_type},
+    :type         => Type::LIST,
+  },
+
+  
+  # musicbrainz_release_group_id
+  {
+    :name         => :musicbrainz_release_group_id,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_release_group_id},
+    :type         => Type::STRING,
+  },
+  
+  # musicbrainz_album_release_country
+  {
+    :name         => :musicbrainz_album_release_country,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_album_release_country},
+    :type         => Type::STRING,
+  },
   ]
 end

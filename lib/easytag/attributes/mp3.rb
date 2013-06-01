@@ -132,6 +132,20 @@ module EasyTag::Attributes
 
       date_str
     end
+
+    def read_ufid(iface)
+      frames = iface.info.id3v2_tag.frame_list('UFID')
+      ufid = nil
+
+      frames.each do |frame|
+        if @handler_opts[:owner].eql?(frame.owner)
+          ufid = frame.identifier
+          break
+        end
+      end
+
+      ufid
+    end
   end
 end
 
@@ -419,5 +433,71 @@ module EasyTag::Attributes
     :handler_opts => {:key => :asin},
     :type         => Type::STRING,
   },
+
+  # musicbrainz_track_id
+  {
+    :name         => :musicbrainz_track_id,
+    :handler      => :read_ufid,
+    :handler_opts => {:owner => 'http://musicbrainz.org'},
+    :type         => Type::STRING,
+  },
+
+  # musicbrainz_album_artist_id
+  {
+    :name         => :musicbrainz_album_artist_id,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_album_artist_id},
+    :type         => Type::STRING,
+  },
+
+  # musicbrainz_artist_id
+  {
+    :name         => :musicbrainz_artist_id,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_artist_id},
+    :type         => Type::LIST,
+  },
+  
+  # musicbrainz_album_id
+  {
+    :name         => :musicbrainz_album_id,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_album_id},
+    :type         => Type::STRING,
+  },
+  
+  # musicbrainz_album_status
+  {
+    :name         => :musicbrainz_album_status,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_album_status},
+    :type         => Type::STRING,
+  },
+  
+  # musicbrainz_album_type
+  {
+    :name         => :musicbrainz_album_type,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_album_type},
+    :type         => Type::LIST,
+  },
+
+  
+  # musicbrainz_release_group_id
+  {
+    :name         => :musicbrainz_release_group_id,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_release_group_id},
+    :type         => Type::STRING,
+  },
+  
+  # musicbrainz_album_release_country
+  {
+    :name         => :musicbrainz_album_release_country,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_album_release_country},
+    :type         => Type::STRING,
+  },
+ 
   ]
 end

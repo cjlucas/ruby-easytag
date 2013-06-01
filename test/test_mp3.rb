@@ -66,4 +66,15 @@ class TestNoTagsMP3 < Test::Unit::TestCase
     assert_equal([0, 0],  @f.disc_num)
   end
 
+  def test_musicbrainz_data
+    assert_equal('', @f.musicbrainz_album_artist_id)
+    assert_equal('', @f.musicbrainz_album_status)
+    assert_equal('', @f.musicbrainz_release_group_id)
+    assert_equal('', @f.musicbrainz_album_id)
+    assert_equal([], @f.musicbrainz_album_type)
+    assert_equal('', @f.musicbrainz_track_id)
+    assert_equal('', @f.musicbrainz_album_release_country)
+    assert_equal([], @f.musicbrainz_artist_id)
+  end
+
 end
