@@ -6,6 +6,9 @@ require 'easytag/attributes/mp3'
 module EasyTag::Interfaces
 
   class MP3 < Base
+    ATTRIB_ARGS  = EasyTag::Attributes::MP3_ATTRIB_ARGS
+    ATTRIB_CLASS = EasyTag::Attributes::MP3Attribute
+
     def initialize(file)
       @info = TagLib::MPEG::File.new(file)
 
@@ -41,13 +44,6 @@ module EasyTag::Interfaces
       end
     end
 
-    EasyTag::Attributes::MP3_ATTRIB_ARGS.each do |attrib_args|
-      attrib = EasyTag::Attributes::MP3Attribute.new(attrib_args)
-      define_method(attrib.name) do
-        instance_variable_get(attrib.ivar) || 
-          instance_variable_set(attrib.ivar, attrib.call(self))
-      end
-    end
-
+    self.build_attributes(ATTRIB_CLASS, ATTRIB_ARGS)
   end
 end

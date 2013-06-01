@@ -13,7 +13,6 @@ module EasyTag::Attributes
   end
 
   class MP4Attribute < BaseAttribute
-    attr_reader :name, :ivar
 
     def initialize(args)
       super(args)

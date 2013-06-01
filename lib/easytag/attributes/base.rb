@@ -11,13 +11,16 @@ module EasyTag::Attributes
   end
   class BaseAttribute
     Utilities = EasyTag::Utilities
+    
+    attr_reader :name, :aliases, :ivar
 
     def initialize(args)
-      @name = args[:name]
+      @name    = args[:name]
       @default = args[:default]
-      @type = args[:type] || Type::STRING
+      @type    = args[:type] || Type::STRING
       @options = args[:options] || {}
-      @ivar = BaseAttribute.name_to_ivar(@name)
+      @aliases = args[:aliases] || []
+      @ivar    = BaseAttribute.name_to_ivar(@name)
 
       if args[:handler].is_a?(Symbol)
         @handler = method(args[:handler])
