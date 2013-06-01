@@ -194,7 +194,8 @@ module EasyTag::Attributes
   # album_artist_sort_order
   {
     :name         => :album_artist_sort_order,
-    :handler      => lambda { |iface| iface.user_info[:albumartistsort] },
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :albumartistsort},
     :type         => Type::STRING,
   },
 
@@ -397,7 +398,16 @@ module EasyTag::Attributes
     :id3v2_frames => ['TXXX'],
     :handler      => :read_field_list_as_key_value,
     :default      => {},
-    :options     => { :normalize => true, 
+    :options     => {:field_list => true},
+  },
+  
+  # user_info_normalized
+  {
+    :name         => :user_info_normalized,
+    :id3v2_frames => ['TXXX'],
+    :handler      => :read_field_list_as_key_value,
+    :default      => {},
+    :options     => {:normalize => true, 
       :to_sym => true,
       :field_list => true },
   },

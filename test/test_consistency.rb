@@ -107,7 +107,7 @@ class TestConsistencyMP302 < Test::Unit::TestCase
       ['Arista',                        @mp3.label],
       [true,                            @mp3.compilation?],
       [0,                               @mp3.bpm],
-      ['B0000AGWFX',                    @mp3.user_info[:asin]],
+      ['B0000AGWFX',                    @mp3.user_info_normalized[:asin]],
     ]
 
     cases.each do |c|
@@ -171,7 +171,8 @@ class TestConsistency02 < Test::Unit::TestCase
       assert_equal(@mp3.send(c), @mp4.send(c))
     end
 
-    assert_equal(@mp3.user_info[:asin], @mp4.user_info[:asin])
+    assert_equal(@mp3.user_info_normalized[:asin],
+                 @mp4.user_info_normalized[:asin])
   end
 
   def test_date

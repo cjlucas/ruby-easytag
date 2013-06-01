@@ -15,12 +15,13 @@ module EasyTag::Attributes
     attr_reader :name, :aliases, :ivar
 
     def initialize(args)
-      @name    = args[:name]
-      @type    = args[:type]
-      @default = args[:default] || self.class.default_for_type(@type)
-      @options = args[:options] || {}
-      @aliases = args[:aliases] || []
-      @ivar    = BaseAttribute.name_to_ivar(@name)
+      @name         = args[:name]
+      @type         = args[:type]
+      @default      = args[:default] || self.class.default_for_type(@type)
+      @options      = args[:options] || {}
+      @handler_opts = args[:handler_opts] || {}
+      @aliases      = args[:aliases] || []
+      @ivar         = BaseAttribute.name_to_ivar(@name)
 
       if args[:handler].is_a?(Symbol)
         @handler = method(args[:handler])
@@ -64,14 +65,12 @@ module EasyTag::Attributes
       end
     end
 
-    # TODO: this currently doesn't support cloning Strings
     def default
       BaseAttribute.can_clone?(@default) ?
         BaseAttribute.deep_copy(@default) : @default
     end
     
     def call(iface)
-      #puts 'entered call()'
       data = @handler.call(iface)
       data = type_cast(data)
       post_process(data)
@@ -109,6 +108,13 @@ module EasyTag::Attributes
     
     def self.name_to_ivar(name)
       name.to_s.gsub(/\?/, '').insert(0, '@').to_sym
+    end
+
+    # read handlers
+
+    def user_info_lookup(iface)
+      key = @handler_opts.fetch(:key, :key_not_given)
+      iface.user_info_normalized[key]
     end
   end
 end

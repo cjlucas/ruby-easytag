@@ -190,8 +190,8 @@ module EasyTag::Attributes
 
   # year
   {
-    :name         => :year,
-    :handler      => lambda { |iface| iface.date.nil? ? 0 : iface.date.year }
+    :name       => :year,
+    :handler    => lambda { |iface| iface.date.nil? ? 0 : iface.date.year }
   },
 
   # apple_id
@@ -284,48 +284,61 @@ module EasyTag::Attributes
     :name       => :user_info,
     :handler    => :read_user_info,
     :default    => {},
+  },
+
+  # user_info_normalized
+  {
+    :name       => :user_info_normalized,
+    :handler    => :read_user_info,
+    :default    => {},
     :options    => {:normalize => true, :to_sym => true},
   },
 
   # subtitle
   {
     :name       => :subtitle,
-    :handler    => lambda { |iface| iface.user_info[:subtitle] },
+    :handler    => :user_info_lookup,
+    :handler_opts => {:key => :subtitle},
     :type       => Type::STRING,
   },
 
   # disc_subtitle
   {
     :name       => :disc_subtitle,
-    :handler    => lambda { |iface| iface.user_info[:discsubtitle] },
+    :handler    => :user_info_lookup,
+    :handler_opts => {:key => :discsubtitle},
     :type       => Type::STRING,
   },
 
   # media
   {
     :name       => :media,
-    :handler    => lambda { |iface| iface.user_info[:media] },
+    :handler    => :user_info_lookup,
+    :handler_opts => {:key => :media},
     :type       => Type::STRING,
   },
 
   # label
   {
     :name       => :label,
-    :handler    => lambda { |iface| iface.user_info[:label] },
+    :handler    => :user_info_lookup,
+    :handler_opts => {:key => :label},
     :type       => Type::STRING,
   },
 
   # composer
   {
     :name       => :composer,
-    :handler    => lambda { |iface| iface.user_info[:composer] },
+    :handler    => :user_info_lookup,
+    :handler_opts => {:key => :composer},
     :type       => Type::STRING,
   },
 
   # lyricist
   {
     :name       => :lyricist,
-    :handler    => lambda { |iface| iface.user_info[:lyricist] },
+    :handler    => :user_info_lookup,
+    :handler_opts => {:key => :lyricist},
     :type       => Type::STRING,
   },
 
