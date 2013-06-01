@@ -113,7 +113,8 @@ module EasyTag::Attributes
     # read handlers
 
     def user_info_lookup(iface)
-      key = @handler_opts.fetch(:key, :key_not_given)
+      key = @handler_opts[:key]
+      warn "@handler_opts[:key] doesn't exist" if key.nil?
       iface.user_info_normalized[key]
     end
   end
