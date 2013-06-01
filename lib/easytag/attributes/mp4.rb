@@ -63,13 +63,15 @@ module EasyTag::Attributes
 
     def read_user_info(iface)
       kv_hash = {}
-      iface.info.tag.item_list_map.to_a.each do |key, value|
+      iface.info.tag.item_list_map.to_a.each do |key, item|
         match_data = key.match(/\:com.apple.iTunes\:(.*)/)
         if match_data
           key = match_data[1]
           key = Utilities.normalize_string(key) if @options[:normalize]
           key = key.to_sym if @options[:to_sym]
-          kv_hash[key] = value.to_string_list[0]
+          
+          values = item.to_string_list
+          kv_hash[key] = values.count > 1 ? values : values.first
         end
       end
 

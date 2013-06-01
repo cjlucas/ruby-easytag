@@ -105,10 +105,12 @@ module EasyTag::Attributes
       frame_data = read_all_id3(iface)
 
       frame_data.each do |data|
-        key, value = data
+        key = data[0]
+        values = data[1..-1]
+
         key = Utilities.normalize_string(key) if @options[:normalize]
         key = key.to_sym if @options[:to_sym]
-        kv_hash[key] = value
+        kv_hash[key] = values.count > 1 ? values : values.first
       end
 
       kv_hash
