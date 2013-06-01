@@ -153,6 +153,7 @@ module EasyTag::Attributes
     :name         => :title_sort_order,
     :id3v2_frames => ['TSOT', 'XSOT'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # subtitle
@@ -160,6 +161,7 @@ module EasyTag::Attributes
     :name         => :subtitle,
     :id3v2_frames => ['TIT3'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # artist
@@ -168,6 +170,7 @@ module EasyTag::Attributes
     :id3v2_frames => ['TPE1'],
     :id3v1_tag    => :artist,
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # artist_sort_order
@@ -177,6 +180,7 @@ module EasyTag::Attributes
     :name         => :artist_sort_order,
     :id3v2_frames => ['TSOP', 'XSOP'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # album_artist
@@ -184,12 +188,14 @@ module EasyTag::Attributes
     :name         => :album_artist,
     :id3v2_frames => ['TPE2'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # album_artist_sort_order
   {
     :name         => :album_artist_sort_order,
-    :handler      => lambda { |iface| iface.user_info[:albumartistsort] }
+    :handler      => lambda { |iface| iface.user_info[:albumartistsort] },
+    :type         => Type::STRING,
   },
 
   # album
@@ -198,6 +204,7 @@ module EasyTag::Attributes
     :id3v2_frames => ['TALB'],
     :id3v1_tag    => :album,
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # compilation?
@@ -217,6 +224,7 @@ module EasyTag::Attributes
     :name         => :album_sort_order,
     :id3v2_frames => ['TSOA', 'XSOA'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
   
   # genre
@@ -225,6 +233,7 @@ module EasyTag::Attributes
     :id3v2_frames => ['TCON'],
     :id3v1_tag    => :genre,
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # disc_subtitle
@@ -232,6 +241,7 @@ module EasyTag::Attributes
     :name         => :disc_subtitle,
     :id3v2_frames => ['TSST'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # media
@@ -239,6 +249,7 @@ module EasyTag::Attributes
     :name         => :media,
     :id3v2_frames => ['TMED'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # label
@@ -246,6 +257,7 @@ module EasyTag::Attributes
     :name         => :label,
     :id3v2_frames => ['TPUB'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # encoded_by
@@ -253,6 +265,7 @@ module EasyTag::Attributes
     :name         => :encoded_by,
     :id3v2_frames => ['TENC'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # encoder_settings
@@ -260,6 +273,7 @@ module EasyTag::Attributes
     :name         => :encoder_settings,
     :id3v2_frames => ['TSSE'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # group
@@ -267,6 +281,7 @@ module EasyTag::Attributes
     :name         => :group,
     :id3v2_frames => ['TIT1'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # composer
@@ -274,6 +289,7 @@ module EasyTag::Attributes
     :name         => :composer,
     :id3v2_frames => ['TCOM'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # lyrics
@@ -281,6 +297,7 @@ module EasyTag::Attributes
     :name         => :lyrics,
     :id3v2_frames => ['USLT'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # lyricist
@@ -288,6 +305,7 @@ module EasyTag::Attributes
     :name         => :lyricist,
     :id3v2_frames => ['TEXT'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # copyright
@@ -295,6 +313,7 @@ module EasyTag::Attributes
     :name         => :copyright,
     :id3v2_frames => ['TCOP'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # bpm
@@ -347,7 +366,8 @@ module EasyTag::Attributes
   # comment
   {
     :name         => :comment,
-    :handler      => lambda { |iface| iface.comments.first }
+    :handler      => lambda { |iface| iface.comments.first },
+    :type         => Type::STRING,
   },
 
   # album_art

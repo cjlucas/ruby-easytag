@@ -88,6 +88,7 @@ module EasyTag::Attributes
     :name       => :title,
     :item_ids   => ['©nam'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # title_sort_order
@@ -95,6 +96,7 @@ module EasyTag::Attributes
     :name       => :title_sort_order,
     :item_ids   => ['sonm'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # artist
@@ -102,6 +104,7 @@ module EasyTag::Attributes
     :name       => :artist,
     :item_ids   => ['©ART'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # artist_sort_order
@@ -109,6 +112,7 @@ module EasyTag::Attributes
     :name       => :artist_sort_order,
     :item_ids   => ['soar'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # album_artist
@@ -116,6 +120,7 @@ module EasyTag::Attributes
     :name       => :album_artist,
     :item_ids   => ['aART'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # album_artist_sort_order
@@ -123,6 +128,7 @@ module EasyTag::Attributes
     :name       => :album_artist_sort_order,
     :item_ids   => ['soaa'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # album
@@ -130,6 +136,7 @@ module EasyTag::Attributes
     :name       => :album,
     :item_ids   => ['©alb'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # album_sort_order
@@ -137,6 +144,7 @@ module EasyTag::Attributes
     :name       => :album_sort_order,
     :item_ids   => ['soal'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # genre
@@ -144,6 +152,7 @@ module EasyTag::Attributes
     :name       => :genre,
     :item_ids   => ['©gen'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # comments
@@ -158,7 +167,8 @@ module EasyTag::Attributes
   # comment
   {
     :name       => :comment,
-    :handler    => lambda { |iface| iface.comments.first }
+    :handler    => lambda { |iface| iface.comments.first },
+    :type       => Type::STRING,
   },
 
   # lyrics
@@ -166,6 +176,7 @@ module EasyTag::Attributes
     :name       => :lyrics,
     :item_ids   => ['©lyr'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # date
@@ -188,6 +199,7 @@ module EasyTag::Attributes
     :name       => :apple_id,
     :item_ids   => ['apid'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # encoded_by
@@ -195,6 +207,7 @@ module EasyTag::Attributes
     :name       => :encoded_by,
     :item_ids   => ['©enc'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # encoder_settings
@@ -202,6 +215,7 @@ module EasyTag::Attributes
     :name       => :encoder_settings,
     :item_ids   => ['©too'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # group
@@ -209,6 +223,7 @@ module EasyTag::Attributes
     :name       => :group,
     :item_ids   => ['©grp'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # compilation?
@@ -234,6 +249,7 @@ module EasyTag::Attributes
     :name       => :copyright,
     :item_ids   => ['cprt'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # track_num
@@ -274,37 +290,43 @@ module EasyTag::Attributes
   # subtitle
   {
     :name       => :subtitle,
-    :handler    => lambda { |iface| iface.user_info[:subtitle] }
+    :handler    => lambda { |iface| iface.user_info[:subtitle] },
+    :type       => Type::STRING,
   },
 
   # disc_subtitle
   {
     :name       => :disc_subtitle,
-    :handler    => lambda { |iface| iface.user_info[:discsubtitle] }
+    :handler    => lambda { |iface| iface.user_info[:discsubtitle] },
+    :type       => Type::STRING,
   },
 
   # media
   {
     :name       => :media,
-    :handler    => lambda { |iface| iface.user_info[:media] }
+    :handler    => lambda { |iface| iface.user_info[:media] },
+    :type       => Type::STRING,
   },
 
   # label
   {
     :name       => :label,
-    :handler    => lambda { |iface| iface.user_info[:label] }
+    :handler    => lambda { |iface| iface.user_info[:label] },
+    :type       => Type::STRING,
   },
 
   # composer
   {
     :name       => :composer,
-    :handler    => lambda { |iface| iface.user_info[:composer] }
+    :handler    => lambda { |iface| iface.user_info[:composer] },
+    :type       => Type::STRING,
   },
 
   # lyricist
   {
     :name       => :lyricist,
-    :handler    => lambda { |iface| iface.user_info[:lyricist] }
+    :handler    => lambda { |iface| iface.user_info[:lyricist] },
+    :type       => Type::STRING,
   },
 
   ]

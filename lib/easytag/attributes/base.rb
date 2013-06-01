@@ -16,8 +16,7 @@ module EasyTag::Attributes
 
     def initialize(args)
       @name    = args[:name]
-      # TODO: Don't allow implicit typing, this just causes headaches
-      @type    = args[:type]    || Type::STRING
+      @type    = args[:type]
       @default = args[:default] || self.class.default_for_type(@type)
       @options = args[:options] || {}
       @aliases = args[:aliases] || []
@@ -59,12 +58,13 @@ module EasyTag::Attributes
       when Type::INT
         0
       when Type::INT_LIST
-        [0, 0]
+        [0, 0] # TODO: don't assume an INT_LIST is always an int pair
       when Type::BOOLEAN
         false
       end
     end
 
+    # TODO: this currently doesn't support cloning Strings
     def default
       BaseAttribute.can_clone?(@default) ?
         BaseAttribute.deep_copy(@default) : @default
@@ -108,10 +108,7 @@ module EasyTag::Attributes
     end
     
     def self.name_to_ivar(name)
-      name = name.to_s
-      name.gsub!(/\?/, '')
-      name.insert(0, '@')
-      name.to_sym
+      name.to_s.gsub(/\?/, '').insert(0, '@').to_sym
     end
   end
 end
