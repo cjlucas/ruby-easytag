@@ -204,8 +204,9 @@ module EasyTag::Attributes
   {
     :name         => :compilation?,
     :id3v2_frames => ['TCMP'],
-    :default      => false,
     :handler      => :read_first_id3,
+    :type         => Type::BOOLEAN,
+    # TODO: remove is_flag option, determine boolean value implicitly 
     :options      => {:is_flag => true},
   },
 
@@ -340,7 +341,7 @@ module EasyTag::Attributes
     :id3v1_tag    => :comment,
     :handler      => :read_all_id3,
     :default      => [],
-    :options      => { :compact => true }
+    :options      => { :compact => true, :delete_empty => true }
   },
   
   # comment

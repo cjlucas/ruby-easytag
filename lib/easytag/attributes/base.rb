@@ -16,8 +16,9 @@ module EasyTag::Attributes
 
     def initialize(args)
       @name    = args[:name]
-      @default = args[:default]
-      @type    = args[:type] || Type::STRING
+      # TODO: Don't allow implicit typing, this just causes headaches
+      @type    = args[:type]    || Type::STRING
+      @default = args[:default] || self.class.default_for_type(@type)
       @options = args[:options] || {}
       @aliases = args[:aliases] || []
       @ivar    = BaseAttribute.name_to_ivar(@name)
@@ -31,11 +32,13 @@ module EasyTag::Attributes
       # fill default options
       
       # Remove nil objects from array (post process)
-      @options[:compact]    ||= false
+      @options[:compact]        ||= false
+      # Delete empty objects in array (post process)
+      @options[:delete_empty]   ||= false
       # normalizes key (if hash) (handler)
-      @options[:normalize]  ||= false
+      @options[:normalize]      ||= false
       # cast key (if hash) to symbol (handler)
-      @options[:to_sym]     ||= false
+      @options[:to_sym]         ||= false
 
     end
     
@@ -45,6 +48,21 @@ module EasyTag::Attributes
 
     def self.deep_copy(obj)
       Marshal.load(Marshal.dump(obj))
+    end
+
+    def self.default_for_type(type)
+      case type
+      when Type::STRING
+        ''
+      when Type::DATETIME
+        nil
+      when Type::INT
+        0
+      when Type::INT_LIST
+        [0, 0]
+      when Type::BOOLEAN
+        false
+      end
     end
 
     def default
@@ -76,28 +94,21 @@ module EasyTag::Attributes
       end
 
       # fall back to default if data is nil
-      data = BaseAttribute.obj_or_nil(data) || default
+      data ||= default
 
-      # run obj_or_nil on each item in array
-      data.map! { |item| BaseAttribute.obj_or_nil(item) } if data.is_a?(Array)
+      # REVIEW: the compact option may not be needed anymore
+      #   since we've done away with casting empty strings to nil
+      data.compact! if @options[:compact] && data.respond_to?(:compact!)
 
-      if @options[:compact] && data.respond_to?(:compact!)
-        data.compact!
+      if @options[:delete_empty]
+        data.select! { |item| !item.empty? if item.respond_to?(:empty?) }
       end
 
       data
     end
-    # avoid returing empty objects
-    def self.obj_or_nil(o)
-      if o.class == String
-        ret = o.empty? ? nil : o
-      else
-        o
-      end
-    end
-
+    
     def self.name_to_ivar(name)
-      name = name.to_s if name.class == Symbol
+      name = name.to_s
       name.gsub!(/\?/, '')
       name.insert(0, '@')
       name.to_sym

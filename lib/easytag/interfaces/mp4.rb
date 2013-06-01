@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 require 'easytag/attributes/mp4'
 
 module EasyTag::Interfaces

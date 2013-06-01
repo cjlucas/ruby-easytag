@@ -1,5 +1,4 @@
 require 'mp3info'
-require 'yaml'
 
 require 'easytag/attributes/mp3'
 

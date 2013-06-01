@@ -174,6 +174,7 @@ module EasyTag::Attributes
     :item_ids   => ['©day'],
     :handler    => :read_first_item,
     :type       => Type::DATETIME,
+    :default    => nil,
   },
 
   # year
@@ -215,8 +216,8 @@ module EasyTag::Attributes
     :name       => :compilation?,
     :item_ids   => ['cpil'],
     :handler    => :read_first_item,
+    :type       => Type::BOOLEAN,
     :item_type  => ItemType::BOOL,
-    :default    => false,
   },
 
   # bpm
