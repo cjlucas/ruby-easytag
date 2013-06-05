@@ -36,6 +36,21 @@ class TestUtilities < Test::Unit::TestCase
     assert_equal(nil, date)
   end
 
+  def test_get_datetime05
+    date = EasyTag::Utilities.get_datetime('2000-00-00')
+    assert_equal(2000, date.year)
+    assert_equal(1, date.month)
+    assert_equal(1, date.day)
+  end
+
+  def test_get_datetime06
+    date = EasyTag::Utilities.get_datetime('2006-99-99')
+    assert_equal(2006, date.year)
+    assert_equal(1, date.month)
+    assert_equal(1, date.day)
+  end
+
+
   def test_get_int_pair
     assert_equal([0, 0],  EasyTag::Utilities.get_int_pair(''))
     assert_equal([0, 0],  EasyTag::Utilities.get_int_pair(nil))

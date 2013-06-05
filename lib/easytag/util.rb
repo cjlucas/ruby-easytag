@@ -2,6 +2,7 @@ require 'date'
 
 module EasyTag
   module Utilities
+    YEAR_RE = /(1[89]|20)\d{2}/ # 1800-2099
 
     # get_datetime
     #
@@ -9,9 +10,15 @@ module EasyTag
     def self.get_datetime(date_str)
       return nil if date_str.nil?
 
+      # DateTime can't handle 00, so replace days/months that are 00 with 01
+      #   (currently only works with YYYY-MM-DD)
+      until date_str[/\-(00)\-?/].nil?
+        date_str[/\-(00)\-?/, 1] = '01'
+      end
+
       # check for known possible formats
       case date_str
-      when /^\d{4}$/ # YYYY
+      when /^#{YEAR_RE}$/
         datetime = DateTime.strptime(date_str, '%Y')
       when /^\d{4}\-\d{2}$/ # YYYY-MM
         datetime = DateTime.strptime(date_str, '%Y-%m')
@@ -28,6 +35,12 @@ module EasyTag
         rescue ArgumentError
           warn "DateTime couldn't parse '#{date_str}'"
         end
+      end
+
+      # try to get the year at the least (don't attempt if date_str is a year)
+      if datetime.nil? && !date_str.match(YEAR_RE).to_s.eql?(date_str)
+        warn 'Falling back to year-only parsing'
+        datetime = get_datetime(date_str.match(YEAR_RE).to_s)
       end
 
       datetime
@@ -73,5 +86,6 @@ module EasyTag
           object
       end
     end
+
   end
 end
