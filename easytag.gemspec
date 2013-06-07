@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = EasyTag::VERSION
   s.summary     = 'A simple audio metadata tagging interface'
   s.description = <<-EOF
-    EasyTag is an abstraction layer to the TagLib audio tagging library.
+    EasyTag is an abstract interface to the TagLib audio tagging library.
     It is designed to provide a simple and consistent API regardless
     of file format being read.
   EOF

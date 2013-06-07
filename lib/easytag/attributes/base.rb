@@ -8,16 +8,21 @@ module EasyTag::Attributes
     STRING_LIST = 4
     BOOLEAN     = 5
     DATETIME    = 6
+    LIST        = 7
   end
   class BaseAttribute
     Utilities = EasyTag::Utilities
+    
+    attr_reader :name, :aliases, :ivar
 
     def initialize(args)
-      @name = args[:name]
-      @default = args[:default]
-      @type = args[:type] || Type::STRING
-      @options = args[:options] || {}
-      @ivar = BaseAttribute.name_to_ivar(@name)
+      @name         = args[:name]
+      @type         = args[:type]
+      @default      = args[:default] || self.class.default_for_type(@type)
+      @options      = args[:options] || {}
+      @handler_opts = args[:handler_opts] || {}
+      @aliases      = args[:aliases] || []
+      @ivar         = BaseAttribute.name_to_ivar(@name)
 
       if args[:handler].is_a?(Symbol)
         @handler = method(args[:handler])
@@ -28,11 +33,13 @@ module EasyTag::Attributes
       # fill default options
       
       # Remove nil objects from array (post process)
-      @options[:compact]    ||= false
-      # normalizes key (if hash) (handler)
-      @options[:normalize]  ||= false
-      # cast key (if hash) to symbol (handler)
-      @options[:to_sym]     ||= false
+      @options[:compact]        ||= false
+      # Delete empty objects in array (post process)
+      @options[:delete_empty]   ||= false
+      # normalizes key (if hash) (handler or post process)
+      @options[:normalize]      ||= false
+      # cast key (if hash) to symbol (handler or post process)
+      @options[:to_sym]         ||= false
 
     end
     
@@ -44,13 +51,29 @@ module EasyTag::Attributes
       Marshal.load(Marshal.dump(obj))
     end
 
+    def self.default_for_type(type)
+      case type
+      when Type::STRING
+        ''
+      when Type::DATETIME
+        nil
+      when Type::INT
+        0
+      when Type::INT_LIST
+        [0, 0] # TODO: don't assume an INT_LIST is always an int pair
+      when Type::BOOLEAN
+        false
+      when Type::LIST
+        []
+      end
+    end
+
     def default
       BaseAttribute.can_clone?(@default) ?
         BaseAttribute.deep_copy(@default) : @default
     end
     
     def call(iface)
-      #puts 'entered call()'
       data = @handler.call(iface)
       data = type_cast(data)
       post_process(data)
@@ -62,6 +85,8 @@ module EasyTag::Attributes
         data = data.to_i
       when Type::DATETIME
         data = Utilities.get_datetime(data.to_s)
+      when Type::LIST
+        data = Array(data)
       end
       
       data
@@ -73,31 +98,46 @@ module EasyTag::Attributes
       end
 
       # fall back to default if data is nil
-      data = BaseAttribute.obj_or_nil(data) || default
+      data ||= default
 
-      # run obj_or_nil on each item in array
-      data.map! { |item| BaseAttribute.obj_or_nil(item) } if data.is_a?(Array)
+      # REVIEW: the compact option may not be needed anymore
+      #   since we've done away with casting empty strings to nil
+      data.compact! if @options[:compact] && data.respond_to?(:compact!)
 
-      if @options[:compact] && data.respond_to?(:compact!)
-        data.compact!
+      if @options[:delete_empty]
+        data.select! { |item| !item.empty? if item.respond_to?(:empty?) }
+      end
+
+      data = Utilities.normalize_object(data) if @options[:normalize]
+
+      # TODO: roll this out to a method that supports more than just array
+      if @options[:to_sym] && data.is_a?(Array)
+        data.map! { |item| item.to_sym if item.respond_to?(:to_sym) }
       end
 
       data
     end
-    # avoid returing empty objects
-    def self.obj_or_nil(o)
-      if o.class == String
-        ret = o.empty? ? nil : o
-      else
-        o
-      end
+    
+    def self.name_to_ivar(name)
+      name.to_s.gsub(/\?/, '').insert(0, '@').to_sym
     end
 
-    def self.name_to_ivar(name)
-      name = name.to_s if name.class == Symbol
-      name.gsub!(/\?/, '')
-      name.insert(0, '@')
-      name.to_sym
+    # read handlers
+
+    def read_default(iface)
+      default
+    end
+
+    def read_audio_property(iface)
+      key = @handler_opts[:key]
+      warn "@handler_opts[:key] doesn't exist" if key.nil?
+      iface.info.audio_properties.send(key)
+    end
+
+    def user_info_lookup(iface)
+      key = @handler_opts[:key]
+      warn "@handler_opts[:key] doesn't exist" if key.nil?
+      iface.user_info_normalized[key]
     end
   end
 end

@@ -13,7 +13,6 @@ module EasyTag::Attributes
   end
 
   class MP4Attribute < BaseAttribute
-    attr_reader :name, :ivar
 
     def initialize(args)
       super(args)
@@ -64,13 +63,15 @@ module EasyTag::Attributes
 
     def read_user_info(iface)
       kv_hash = {}
-      iface.info.tag.item_list_map.to_a.each do |key, value|
+      iface.info.tag.item_list_map.to_a.each do |key, item|
         match_data = key.match(/\:com.apple.iTunes\:(.*)/)
         if match_data
           key = match_data[1]
           key = Utilities.normalize_string(key) if @options[:normalize]
           key = key.to_sym if @options[:to_sym]
-          kv_hash[key] = value.to_string_list[0]
+          
+          values = item.to_string_list
+          kv_hash[key] = values.count > 1 ? values : values.first
         end
       end
 
@@ -87,6 +88,7 @@ module EasyTag::Attributes
     :name       => :title,
     :item_ids   => ['©nam'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # title_sort_order
@@ -94,6 +96,7 @@ module EasyTag::Attributes
     :name       => :title_sort_order,
     :item_ids   => ['sonm'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # artist
@@ -101,6 +104,7 @@ module EasyTag::Attributes
     :name       => :artist,
     :item_ids   => ['©ART'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # artist_sort_order
@@ -108,6 +112,7 @@ module EasyTag::Attributes
     :name       => :artist_sort_order,
     :item_ids   => ['soar'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # album_artist
@@ -115,6 +120,7 @@ module EasyTag::Attributes
     :name       => :album_artist,
     :item_ids   => ['aART'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # album_artist_sort_order
@@ -122,6 +128,7 @@ module EasyTag::Attributes
     :name       => :album_artist_sort_order,
     :item_ids   => ['soaa'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # album
@@ -129,6 +136,7 @@ module EasyTag::Attributes
     :name       => :album,
     :item_ids   => ['©alb'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # album_sort_order
@@ -136,6 +144,7 @@ module EasyTag::Attributes
     :name       => :album_sort_order,
     :item_ids   => ['soal'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # genre
@@ -143,6 +152,7 @@ module EasyTag::Attributes
     :name       => :genre,
     :item_ids   => ['©gen'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # comments
@@ -157,7 +167,8 @@ module EasyTag::Attributes
   # comment
   {
     :name       => :comment,
-    :handler    => lambda { |iface| iface.comments.first }
+    :handler    => lambda { |iface| iface.comments.first },
+    :type       => Type::STRING,
   },
 
   # lyrics
@@ -165,6 +176,7 @@ module EasyTag::Attributes
     :name       => :lyrics,
     :item_ids   => ['©lyr'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # date
@@ -173,12 +185,13 @@ module EasyTag::Attributes
     :item_ids   => ['©day'],
     :handler    => :read_first_item,
     :type       => Type::DATETIME,
+    :default    => nil,
   },
 
   # year
   {
-    :name         => :year,
-    :handler      => lambda { |iface| iface.date.nil? ? 0 : iface.date.year }
+    :name       => :year,
+    :handler    => lambda { |iface| iface.date.nil? ? 0 : iface.date.year }
   },
 
   # apple_id
@@ -186,6 +199,7 @@ module EasyTag::Attributes
     :name       => :apple_id,
     :item_ids   => ['apid'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # encoded_by
@@ -193,6 +207,7 @@ module EasyTag::Attributes
     :name       => :encoded_by,
     :item_ids   => ['©enc'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # encoder_settings
@@ -200,6 +215,7 @@ module EasyTag::Attributes
     :name       => :encoder_settings,
     :item_ids   => ['©too'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # group
@@ -207,6 +223,7 @@ module EasyTag::Attributes
     :name       => :group,
     :item_ids   => ['©grp'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # compilation?
@@ -214,8 +231,8 @@ module EasyTag::Attributes
     :name       => :compilation?,
     :item_ids   => ['cpil'],
     :handler    => :read_first_item,
+    :type       => Type::BOOLEAN,
     :item_type  => ItemType::BOOL,
-    :default    => false,
   },
 
   # bpm
@@ -227,11 +244,21 @@ module EasyTag::Attributes
     :default    => 0,
   },
 
+  # mood
+  {
+    :name       => :mood,
+    :item_ids   => ['mood'],
+    :handler    => :read_first_item,
+    :item_type  => ItemType::STRING,
+    :type       => Type::STRING,
+  },
+
   # copyright
   {
     :name       => :copyright,
     :item_ids   => ['cprt'],
     :handler    => :read_first_item,
+    :type       => Type::STRING,
   },
 
   # track_num
@@ -266,44 +293,209 @@ module EasyTag::Attributes
     :name       => :user_info,
     :handler    => :read_user_info,
     :default    => {},
+  },
+
+  # user_info_normalized
+  {
+    :name       => :user_info_normalized,
+    :handler    => :read_user_info,
+    :default    => {},
     :options    => {:normalize => true, :to_sym => true},
   },
 
   # subtitle
   {
     :name       => :subtitle,
-    :handler    => lambda { |iface| iface.user_info[:subtitle] }
+    :handler    => :user_info_lookup,
+    :handler_opts => {:key => :subtitle},
+    :type       => Type::STRING,
   },
 
   # disc_subtitle
   {
     :name       => :disc_subtitle,
-    :handler    => lambda { |iface| iface.user_info[:discsubtitle] }
+    :handler    => :user_info_lookup,
+    :handler_opts => {:key => :discsubtitle},
+    :type       => Type::STRING,
   },
 
   # media
   {
     :name       => :media,
-    :handler    => lambda { |iface| iface.user_info[:media] }
+    :handler    => :user_info_lookup,
+    :handler_opts => {:key => :media},
+    :type       => Type::STRING,
   },
 
   # label
   {
     :name       => :label,
-    :handler    => lambda { |iface| iface.user_info[:label] }
+    :handler    => :user_info_lookup,
+    :handler_opts => {:key => :label},
+    :type       => Type::STRING,
   },
 
   # composer
   {
     :name       => :composer,
-    :handler    => lambda { |iface| iface.user_info[:composer] }
+    :handler    => :user_info_lookup,
+    :handler_opts => {:key => :composer},
+    :type       => Type::STRING,
+  },
+
+  # conductor
+  {
+    :name       => :conductor,
+    :handler    => :user_info_lookup,
+    :handler_opts => {:key => :conductor},
+    :type       => Type::STRING,
+  },
+
+  # remixer
+  {
+    :name       => :remixer,
+    :handler    => :user_info_lookup,
+    :handler_opts => {:key => :remixer},
+    :type       => Type::STRING,
   },
 
   # lyricist
   {
     :name       => :lyricist,
-    :handler    => lambda { |iface| iface.user_info[:lyricist] }
+    :handler    => :user_info_lookup,
+    :handler_opts => {:key => :lyricist},
+    :type       => Type::STRING,
   },
 
+  # asin
+  {
+    :name         => :asin,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :asin},
+    :type         => Type::STRING,
+  },
+
+  #
+  # MusicBrainz Attributes
+  #
+
+  # musicbrainz_track_id
+  {
+    :name         => :musicbrainz_track_id,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_track_id},
+    :type         => Type::STRING,
+  },
+
+  # musicbrainz_album_artist_id
+  {
+    :name         => :musicbrainz_album_artist_id,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_album_artist_id},
+    :type         => Type::STRING,
+  },
+
+  # musicbrainz_artist_id
+  {
+    :name         => :musicbrainz_artist_id,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_artist_id},
+    :type         => Type::LIST,
+  },
+  
+  # musicbrainz_album_id
+  {
+    :name         => :musicbrainz_album_id,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_album_id},
+    :type         => Type::STRING,
+  },
+  
+  # musicbrainz_album_status
+  {
+    :name         => :musicbrainz_album_status,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_album_status},
+    :type         => Type::STRING,
+  },
+  
+  # musicbrainz_album_type
+  {
+    :name         => :musicbrainz_album_type,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_album_type},
+    :type         => Type::LIST,
+  },
+
+  
+  # musicbrainz_release_group_id
+  {
+    :name         => :musicbrainz_release_group_id,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_release_group_id},
+    :type         => Type::STRING,
+  },
+  
+  # musicbrainz_album_release_country
+  {
+    :name         => :musicbrainz_album_release_country,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_album_release_country},
+    :type         => Type::STRING,
+  },
+
+  #
+  # Audio Properties
+  #
+
+  # length 
+  {
+    :name         => :length,
+    :aliases      => [:duration],
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :length},
+    :type         => Type::INT,
+  },
+
+  # bitrate
+  {
+    :name         => :bitrate,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :bitrate},
+    :type         => Type::INT,
+  },
+
+  # sample_rate
+  {
+    :name         => :sample_rate,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :sample_rate},
+    :type         => Type::INT,
+  },
+
+  # channels
+  {
+    :name         => :channels,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :channels},
+    :type         => Type::INT,
+  },
+
+  # bits_per_sample
+  {
+    :name         => :bits_per_sample,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :bits_per_sample},
+    :type         => Type::INT,
+  },
+ 
+  # NOTE: Not supported by ruby-easytag 0.6.0
+  ## encrypted?
+  #{
+    #:name         => :encrypted?,
+    #:handler      => :read_audio_property,
+    #:handler_opts => {:key => :encrypted?},
+    #:type         => Type::BOOLEAN,
+  #},
   ]
 end

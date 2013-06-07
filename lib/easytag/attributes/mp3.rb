@@ -105,10 +105,12 @@ module EasyTag::Attributes
       frame_data = read_all_id3(iface)
 
       frame_data.each do |data|
-        key, value = data
+        key = data[0]
+        values = data[1..-1]
+
         key = Utilities.normalize_string(key) if @options[:normalize]
         key = key.to_sym if @options[:to_sym]
-        kv_hash[key] = value
+        kv_hash[key] = values.count > 1 ? values : values.first
       end
 
       kv_hash
@@ -129,6 +131,20 @@ module EasyTag::Attributes
       puts "MP3#date: date_str = \"#{date_str}\"" if $DEBUG
 
       date_str
+    end
+
+    def read_ufid(iface)
+      frames = iface.info.id3v2_tag.frame_list('UFID')
+      ufid = nil
+
+      frames.each do |frame|
+        if @handler_opts[:owner].eql?(frame.owner)
+          ufid = frame.identifier
+          break
+        end
+      end
+
+      ufid
     end
   end
 end
@@ -151,6 +167,7 @@ module EasyTag::Attributes
     :name         => :title_sort_order,
     :id3v2_frames => ['TSOT', 'XSOT'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # subtitle
@@ -158,6 +175,7 @@ module EasyTag::Attributes
     :name         => :subtitle,
     :id3v2_frames => ['TIT3'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # artist
@@ -166,6 +184,7 @@ module EasyTag::Attributes
     :id3v2_frames => ['TPE1'],
     :id3v1_tag    => :artist,
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # artist_sort_order
@@ -175,6 +194,7 @@ module EasyTag::Attributes
     :name         => :artist_sort_order,
     :id3v2_frames => ['TSOP', 'XSOP'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # album_artist
@@ -182,12 +202,15 @@ module EasyTag::Attributes
     :name         => :album_artist,
     :id3v2_frames => ['TPE2'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # album_artist_sort_order
   {
     :name         => :album_artist_sort_order,
-    :handler      => lambda { |iface| iface.user_info[:albumartistsort] }
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :albumartistsort},
+    :type         => Type::STRING,
   },
 
   # album
@@ -196,14 +219,16 @@ module EasyTag::Attributes
     :id3v2_frames => ['TALB'],
     :id3v1_tag    => :album,
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # compilation?
   {
     :name         => :compilation?,
     :id3v2_frames => ['TCMP'],
-    :default      => false,
     :handler      => :read_first_id3,
+    :type         => Type::BOOLEAN,
+    # TODO: remove is_flag option, determine boolean value implicitly 
     :options      => {:is_flag => true},
   },
 
@@ -214,6 +239,7 @@ module EasyTag::Attributes
     :name         => :album_sort_order,
     :id3v2_frames => ['TSOA', 'XSOA'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
   
   # genre
@@ -222,6 +248,7 @@ module EasyTag::Attributes
     :id3v2_frames => ['TCON'],
     :id3v1_tag    => :genre,
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # disc_subtitle
@@ -229,6 +256,7 @@ module EasyTag::Attributes
     :name         => :disc_subtitle,
     :id3v2_frames => ['TSST'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # media
@@ -236,6 +264,7 @@ module EasyTag::Attributes
     :name         => :media,
     :id3v2_frames => ['TMED'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # label
@@ -243,6 +272,7 @@ module EasyTag::Attributes
     :name         => :label,
     :id3v2_frames => ['TPUB'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # encoded_by
@@ -250,6 +280,7 @@ module EasyTag::Attributes
     :name         => :encoded_by,
     :id3v2_frames => ['TENC'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # encoder_settings
@@ -257,6 +288,7 @@ module EasyTag::Attributes
     :name         => :encoder_settings,
     :id3v2_frames => ['TSSE'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # group
@@ -264,6 +296,7 @@ module EasyTag::Attributes
     :name         => :group,
     :id3v2_frames => ['TIT1'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # composer
@@ -271,6 +304,23 @@ module EasyTag::Attributes
     :name         => :composer,
     :id3v2_frames => ['TCOM'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
+  },
+
+  # conductor
+  {
+    :name         => :conductor,
+    :id3v2_frames => ['TPE3'],
+    :handler      => :read_first_id3,
+    :type         => Type::STRING,
+  },
+
+  # remixer
+  {
+    :name         => :remixer,
+    :id3v2_frames => ['TPE4'],
+    :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # lyrics
@@ -278,6 +328,7 @@ module EasyTag::Attributes
     :name         => :lyrics,
     :id3v2_frames => ['USLT'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # lyricist
@@ -285,6 +336,7 @@ module EasyTag::Attributes
     :name         => :lyricist,
     :id3v2_frames => ['TEXT'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # copyright
@@ -292,6 +344,7 @@ module EasyTag::Attributes
     :name         => :copyright,
     :id3v2_frames => ['TCOP'],
     :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # bpm
@@ -300,6 +353,14 @@ module EasyTag::Attributes
     :id3v2_frames => ['TBPM'],
     :handler      => :read_first_id3,
     :type         => Type::INT,
+  },
+
+  # mood
+  {
+    :name         => :mood,
+    :id3v2_frames => ['TMOO'],
+    :handler      => :read_first_id3,
+    :type         => Type::STRING,
   },
 
   # track_num
@@ -338,13 +399,14 @@ module EasyTag::Attributes
     :id3v1_tag    => :comment,
     :handler      => :read_all_id3,
     :default      => [],
-    :options      => { :compact => true }
+    :options      => { :compact => true, :delete_empty => true }
   },
   
   # comment
   {
     :name         => :comment,
-    :handler      => lambda { |iface| iface.comments.first }
+    :handler      => lambda { |iface| iface.comments.first },
+    :type         => Type::STRING,
   },
 
   # album_art
@@ -368,15 +430,177 @@ module EasyTag::Attributes
     :handler      => lambda { |iface| iface.date.nil? ? 0 : iface.date.year }
   },
 
+  # apple_id
+  {
+    :name         => :apple_id,
+    :handler      => :read_default,
+    :type         => Type::STRING,
+  },
+
   # user_info
   {
     :name         => :user_info,
     :id3v2_frames => ['TXXX'],
     :handler      => :read_field_list_as_key_value,
     :default      => {},
-    :options     => { :normalize => true, 
+    :options     => {:field_list => true},
+  },
+  
+  # user_info_normalized
+  {
+    :name         => :user_info_normalized,
+    :id3v2_frames => ['TXXX'],
+    :handler      => :read_field_list_as_key_value,
+    :default      => {},
+    :options     => {:normalize => true, 
       :to_sym => true,
       :field_list => true },
+  },
+
+  # asin
+  {
+    :name         => :asin,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :asin},
+    :type         => Type::STRING,
+  },
+
+  #
+  # MusicBrainz Attributes
+  #
+
+  # musicbrainz_track_id
+  {
+    :name         => :musicbrainz_track_id,
+    :handler      => :read_ufid,
+    :handler_opts => {:owner => 'http://musicbrainz.org'},
+    :type         => Type::STRING,
+  },
+
+  # musicbrainz_album_artist_id
+  {
+    :name         => :musicbrainz_album_artist_id,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_album_artist_id},
+    :type         => Type::STRING,
+  },
+
+  # musicbrainz_artist_id
+  {
+    :name         => :musicbrainz_artist_id,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_artist_id},
+    :type         => Type::LIST,
+  },
+  
+  # musicbrainz_album_id
+  {
+    :name         => :musicbrainz_album_id,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_album_id},
+    :type         => Type::STRING,
+  },
+  
+  # musicbrainz_album_status
+  {
+    :name         => :musicbrainz_album_status,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_album_status},
+    :type         => Type::STRING,
+  },
+  
+  # musicbrainz_album_type
+  {
+    :name         => :musicbrainz_album_type,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_album_type},
+    :type         => Type::LIST,
+  },
+
+  
+  # musicbrainz_release_group_id
+  {
+    :name         => :musicbrainz_release_group_id,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_release_group_id},
+    :type         => Type::STRING,
+  },
+  
+  # musicbrainz_album_release_country
+  {
+    :name         => :musicbrainz_album_release_country,
+    :handler      => :user_info_lookup,
+    :handler_opts => {:key => :musicbrainz_album_release_country},
+    :type         => Type::STRING,
+  },
+
+  #
+  # Audio Properties
+  #
+ 
+  # length 
+  {
+    :name         => :length,
+    :aliases      => [:duration],
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :length},
+    :type         => Type::INT,
+  },
+
+  # bitrate
+  {
+    :name         => :bitrate,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :bitrate},
+    :type         => Type::INT,
+  },
+
+  # sample_rate
+  {
+    :name         => :sample_rate,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :sample_rate},
+    :type         => Type::INT,
+  },
+
+  # channels
+  {
+    :name         => :channels,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :channels},
+    :type         => Type::INT,
+  },
+
+  # copyrighted?
+  {
+    :name         => :copyrighted?,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :copyrighted?},
+    :type         => Type::BOOLEAN,
+  },
+
+  # layer
+  {
+    :name         => :layer,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :layer},
+    :type         => Type::INT,
+  },
+
+  # original?
+  {
+    :name         => :original?,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :original?},
+    :type         => Type::BOOLEAN,
+  },
+
+  # protection_enabled?
+  {
+    :name         => :protection_enabled?,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :protection_enabled},
+    :type         => Type::BOOLEAN,
   },
   ]
 end

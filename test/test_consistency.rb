@@ -90,15 +90,15 @@ class TestConsistencyMP302 < Test::Unit::TestCase
   def test_tags
     cases = [
       ['She Lives in My Lap',           @mp3.title],
-      [nil,                             @mp3.title_sort_order],
+      ['',                             @mp3.title_sort_order],
       ['OutKast feat. Rosario Dawson',  @mp3.artist],
       ['OutKast feat. Dawson, Rosario', @mp3.artist_sort_order],
       ['OutKast',                       @mp3.album_artist],
-      #[nil,                             @mp3.album_artist_sort_order],
+      ['',                             @mp3.album_artist_sort_order],
       ['Speakerboxxx / The Love Below', @mp3.album],
-      [nil,                             @mp3.album_sort_order],
+      ['',                             @mp3.album_sort_order],
       [[],                             @mp3.comments],
-      [nil,                             @mp3.genre],
+      ['',                             @mp3.genre],
       [2003,                            @mp3.year],
       [[8, 21],                         @mp3.track_num],
       [[2, 2],                          @mp3.disc_num],
@@ -107,7 +107,7 @@ class TestConsistencyMP302 < Test::Unit::TestCase
       ['Arista',                        @mp3.label],
       [true,                            @mp3.compilation?],
       [0,                               @mp3.bpm],
-      ['B0000AGWFX',                    @mp3.user_info[:asin]],
+      ['B0000AGWFX',                    @mp3.asin],
     ]
 
     cases.each do |c|
@@ -124,6 +124,26 @@ class TestConsistencyMP302 < Test::Unit::TestCase
     assert_equal(2003, @mp3.original_date.year)
     assert_equal(9,   @mp3.original_date.month)
     assert_equal(23,    @mp3.original_date.day)
+  end
+
+  def test_musicbrainz_data
+    cases = [
+      [['album'], @mp3.musicbrainz_album_type],
+      ['73fdb566-a9b1-494c-9f32-51768ec9fd27',
+        @mp3.musicbrainz_album_artist_id],
+      [["73fdb566-a9b1-494c-9f32-51768ec9fd27",
+        "9facf8dc-df23-4561-85c5-ece75d692f21"], @mp3.musicbrainz_artist_id],
+      ['468cd19e-d55c-46a2-a5a6-66292d2f0a90', @mp3.musicbrainz_album_id],
+      ['fa64febd-61e0-346e-aaa2-04564ed4f0a3', 
+        @mp3.musicbrainz_release_group_id],
+      ['US', @mp3.musicbrainz_album_release_country],
+      ['official', @mp3.musicbrainz_album_status],
+    ]
+
+    cases.each do |c|
+      expected, actual = c
+      assert_equal(expected, actual)
+    end
   end
 
   def test_album_art
@@ -164,14 +184,17 @@ class TestConsistency02 < Test::Unit::TestCase
       :label,
       :compilation?,
       :bpm,
+      :asin,
+      :conductor,
+      :remixer,
+      :mood,
     ]
 
     cases.each do |c|
-      puts c
+      #puts c
       assert_equal(@mp3.send(c), @mp4.send(c))
     end
 
-    assert_equal(@mp3.user_info[:asin], @mp4.user_info[:asin])
   end
 
   def test_date
@@ -186,6 +209,24 @@ class TestConsistency02 < Test::Unit::TestCase
     img_mp4 = @mp4.album_art[0]
     assert_equal(img_mp3.mime_type, img_mp4.mime_type)
     assert_equal(img_mp3.data, img_mp4.data)
+  end
+
+  def test_musicbrainz_data
+    cases = [
+      :musicbrainz_album_artist_id,
+      :musicbrainz_album_id,
+      :musicbrainz_album_release_country,
+      :musicbrainz_album_status,
+      :musicbrainz_album_type,
+      :musicbrainz_artist_id,
+      :musicbrainz_release_group_id,
+      :musicbrainz_track_id,
+    ]
+
+    cases.each do |c|
+      #puts c
+      assert_equal(@mp3.send(c), @mp4.send(c))
+    end
   end
 
 end
