@@ -24,6 +24,7 @@ class TestNoTagsMP4 < Test::Unit::TestCase
     assert_equal([0, 0], @f.disc_num)
     assert_equal('',    @f.conductor)
     assert_equal('',    @f.remixer)
+    assert_equal('',    @f.mood)
   end
   
   def test_musicbrainz_data

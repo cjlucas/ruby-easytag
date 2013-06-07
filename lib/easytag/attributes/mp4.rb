@@ -244,6 +244,15 @@ module EasyTag::Attributes
     :default    => 0,
   },
 
+  # mood
+  {
+    :name       => :mood,
+    :item_ids   => ['mood'],
+    :handler    => :read_first_item,
+    :item_type  => ItemType::STRING,
+    :type       => Type::STRING,
+  },
+
   # copyright
   {
     :name       => :copyright,

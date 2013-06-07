@@ -355,6 +355,14 @@ module EasyTag::Attributes
     :type         => Type::INT,
   },
 
+  # mood
+  {
+    :name         => :mood,
+    :id3v2_frames => ['TMOO'],
+    :handler      => :read_first_id3,
+    :type         => Type::STRING,
+  },
+
   # track_num
   {
     :name         => :track_num,

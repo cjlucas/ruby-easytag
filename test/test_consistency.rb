@@ -187,6 +187,7 @@ class TestConsistency02 < Test::Unit::TestCase
       :asin,
       :conductor,
       :remixer,
+      :mood,
     ]
 
     cases.each do |c|
