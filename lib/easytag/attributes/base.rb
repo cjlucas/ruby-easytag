@@ -124,6 +124,10 @@ module EasyTag::Attributes
 
     # read handlers
 
+    def read_default(iface)
+      default
+    end
+
     def user_info_lookup(iface)
       key = @handler_opts[:key]
       warn "@handler_opts[:key] doesn't exist" if key.nil?

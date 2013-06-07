@@ -18,7 +18,7 @@ class TestID3v1OnlyMP3 < Test::Unit::TestCase
     assert_equal(1988,                  @f.year)
     assert_equal(1988,                  @f.date.year)
     assert_equal(true,                  @f.album_art.empty?)
-    #assert_equal('',                   @f.apple_id)
+    assert_equal('',                    @f.apple_id)
     assert_equal([3, 0],                @f.track_num)
     assert_equal([0, 0],                @f.disc_num)
 
@@ -39,7 +39,7 @@ class TestID3v2OnlyMP3 < Test::Unit::TestCase
     assert_equal(1988,                @f.year)
     assert_equal(1988,                @f.date.year)
     assert_equal(true,                @f.album_art.empty?)
-    #assert_equal('',                 @f.apple_id)
+    assert_equal('',                  @f.apple_id)
     assert_equal([3, 0],              @f.track_num)
     assert_equal([0, 0],              @f.disc_num)
 
@@ -61,7 +61,7 @@ class TestNoTagsMP3 < Test::Unit::TestCase
     assert_equal(0,    @f.year)
     assert_equal(nil,  @f.date)
     assert_equal(true, @f.album_art.empty?)
-    #assert_equal('',  @f.apple_id)
+    assert_equal('',   @f.apple_id)
     assert_equal([0, 0],  @f.track_num)
     assert_equal([0, 0],  @f.disc_num)
   end

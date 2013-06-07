@@ -134,7 +134,8 @@ class TestConsistencyMP302 < Test::Unit::TestCase
       [["73fdb566-a9b1-494c-9f32-51768ec9fd27",
         "9facf8dc-df23-4561-85c5-ece75d692f21"], @mp3.musicbrainz_artist_id],
       ['468cd19e-d55c-46a2-a5a6-66292d2f0a90', @mp3.musicbrainz_album_id],
-      ['fa64febd-61e0-346e-aaa2-04564ed4f0a3', @mp3.musicbrainz_release_group_id],
+      ['fa64febd-61e0-346e-aaa2-04564ed4f0a3', 
+        @mp3.musicbrainz_release_group_id],
       ['US', @mp3.musicbrainz_album_release_country],
       ['official', @mp3.musicbrainz_album_status],
     ]

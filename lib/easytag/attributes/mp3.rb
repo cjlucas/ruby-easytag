@@ -406,6 +406,13 @@ module EasyTag::Attributes
     :handler      => lambda { |iface| iface.date.nil? ? 0 : iface.date.year }
   },
 
+  # apple_id
+  {
+    :name         => :apple_id,
+    :handler      => :read_default,
+    :type         => Type::STRING,
+  },
+
   # user_info
   {
     :name         => :user_info,

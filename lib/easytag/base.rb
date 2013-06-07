@@ -16,11 +16,11 @@ module EasyTag
     end
 
     def proxy_getter(m)
-      if @interface.respond_to?(m)
-        @interface.send(m)
-      else
+      unless @interface.respond_to?(m)
         warn "#{@interface.class} doesn't support method #{m}"
       end
+      
+      @interface.send(m)
     end
 
     # dynamic instance method generation
