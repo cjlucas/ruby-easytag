@@ -1,4 +1,4 @@
-EasyTag is an abstraction layer to the [TagLib](http://taglib.github.io/) audio tagging library. It is designed to provide a simple and consistent API regardless of file format being read.
+EasyTag is an abstract interface to the [TagLib](http://taglib.github.io/) audio tagging library. It is designed to provide a simple and consistent API regardless of file format being read.
 
 A quick reference to which attributes are currently supported can be found [here](https://github.com/cjlucas/ruby-easytag/wiki/Currently-Supported-Attributes).
 

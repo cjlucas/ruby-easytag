@@ -1,3 +1,36 @@
+##### v0.4.0 (2013-06-07) #####
+* added: general attributes
+  - `#asin`
+  - `#conductor`
+  - `#remixer`
+  - `#mood`
+* added: musicbrainz attributes
+  - `#musicbrainz_track_id`
+  - `#musicbrainz_album_id`
+  - `#musicbrainz_album_status`
+  - `#musicbrainz_album_type`
+  - `#musicbrainz_album_release_country`
+  - `#musicbrainz_artist_id`
+  - `#musicbrainz_album_artist_id`
+  - `#musicbrainz_release_group_id`
+* added: audio property attributes
+  - `#length` (alias: `#duration`)
+  - `#bitrate`
+  - `#sample_rate`
+  - `#channels`
+  - `MP3#layer`
+  - `MP3#copyrighted?`
+  - `MP3#original?`
+  - `MP3#protection_enabled?`
+  - `MP4#bits_per_sample`
+* added: support for attribute aliases
+* changed: attributes that return `String` now default to an empty string
+  instead of `nil`
+* changed: unsupported attributes now return a default value instead of always
+`nil` (ex: `MP3#apple_id`)
+* fixed: `#user_info` stores an array of values if item has multiple value
+* fixed: improvements to `#date` (issues #1 and #2)
+
 ##### v0.3.1 (2013-05-31) #####
 * fixed: `MP3#subtitle` now points to correct ID3 frame
 * fixed: restored `MP3#user_info`
