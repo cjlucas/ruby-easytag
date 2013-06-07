@@ -128,6 +128,12 @@ module EasyTag::Attributes
       default
     end
 
+    def read_audio_property(iface)
+      key = @handler_opts[:key]
+      warn "@handler_opts[:key] doesn't exist" if key.nil?
+      iface.info.audio_properties.send(key)
+    end
+
     def user_info_lookup(iface)
       key = @handler_opts[:key]
       warn "@handler_opts[:key] doesn't exist" if key.nil?

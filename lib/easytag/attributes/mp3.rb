@@ -441,6 +441,10 @@ module EasyTag::Attributes
     :type         => Type::STRING,
   },
 
+  #
+  # MusicBrainz Attributes
+  #
+
   # musicbrainz_track_id
   {
     :name         => :musicbrainz_track_id,
@@ -505,6 +509,74 @@ module EasyTag::Attributes
     :handler_opts => {:key => :musicbrainz_album_release_country},
     :type         => Type::STRING,
   },
+
+  #
+  # Audio Properties
+  #
  
+  # length 
+  {
+    :name         => :length,
+    :aliases      => [:duration],
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :length},
+    :type         => Type::INT,
+  },
+
+  # bitrate
+  {
+    :name         => :bitrate,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :bitrate},
+    :type         => Type::INT,
+  },
+
+  # sample_rate
+  {
+    :name         => :sample_rate,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :sample_rate},
+    :type         => Type::INT,
+  },
+
+  # channels
+  {
+    :name         => :channels,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :channels},
+    :type         => Type::INT,
+  },
+
+  # copyrighted?
+  {
+    :name         => :copyrighted?,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :copyrighted?},
+    :type         => Type::BOOLEAN,
+  },
+
+  # layer
+  {
+    :name         => :layer,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :layer},
+    :type         => Type::INT,
+  },
+
+  # original?
+  {
+    :name         => :original?,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :original?},
+    :type         => Type::BOOLEAN,
+  },
+
+  # protection_enabled?
+  {
+    :name         => :protection_enabled?,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :protection_enabled},
+    :type         => Type::BOOLEAN,
+  },
   ]
 end

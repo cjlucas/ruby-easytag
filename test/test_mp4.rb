@@ -35,4 +35,12 @@ class TestNoTagsMP4 < Test::Unit::TestCase
     assert_equal([], @f.musicbrainz_artist_id)
   end
 
+  def test_audio_properties
+    assert_equal(4,     @f.duration)
+    assert_equal(176,   @f.bitrate)
+    assert_equal(44100, @f.sample_rate)
+    assert_equal(2,     @f.channels)
+    assert_equal(16,    @f.bits_per_sample)
+  end
+
 end

@@ -350,6 +350,10 @@ module EasyTag::Attributes
     :type         => Type::STRING,
   },
 
+  #
+  # MusicBrainz Attributes
+  #
+
   # musicbrainz_track_id
   {
     :name         => :musicbrainz_track_id,
@@ -414,5 +418,59 @@ module EasyTag::Attributes
     :handler_opts => {:key => :musicbrainz_album_release_country},
     :type         => Type::STRING,
   },
+
+  #
+  # Audio Properties
+  #
+
+  # length 
+  {
+    :name         => :length,
+    :aliases      => [:duration],
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :length},
+    :type         => Type::INT,
+  },
+
+  # bitrate
+  {
+    :name         => :bitrate,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :bitrate},
+    :type         => Type::INT,
+  },
+
+  # sample_rate
+  {
+    :name         => :sample_rate,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :sample_rate},
+    :type         => Type::INT,
+  },
+
+  # channels
+  {
+    :name         => :channels,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :channels},
+    :type         => Type::INT,
+  },
+
+  # bits_per_sample
+  {
+    :name         => :bits_per_sample,
+    :handler      => :read_audio_property,
+    :handler_opts => {:key => :bits_per_sample},
+    :type         => Type::INT,
+  },
+ 
+  # NOTE: Not supported by ruby-easytag 0.6.0
+  ## encrypted?
+  #{
+    #:name         => :encrypted?,
+    #:handler      => :read_audio_property,
+    #:handler_opts => {:key => :encrypted?},
+    #:type         => Type::BOOLEAN,
+  #},
   ]
 end

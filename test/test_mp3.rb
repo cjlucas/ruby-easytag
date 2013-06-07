@@ -77,4 +77,19 @@ class TestNoTagsMP3 < Test::Unit::TestCase
     assert_equal([], @f.musicbrainz_artist_id)
   end
 
+  def test_aliases
+    assert_equal(@f.length, @f.duration)
+  end
+
+  def test_audio_properties
+    assert_equal(4,     @f.duration)
+    assert_equal(74,    @f.bitrate)
+    assert_equal(44100, @f.sample_rate)
+    assert_equal(2,     @f.channels)
+    assert_equal(true,  @f.original?)
+    assert_equal(3,     @f.layer)
+    assert_equal(false, @f.copyrighted?)
+    assert_equal(false, @f.protection_enabled?)
+  end
+
 end
