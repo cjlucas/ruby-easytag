@@ -307,6 +307,22 @@ module EasyTag::Attributes
     :type         => Type::STRING,
   },
 
+  # conductor
+  {
+    :name         => :conductor,
+    :id3v2_frames => ['TPE3'],
+    :handler      => :read_first_id3,
+    :type         => Type::STRING,
+  },
+
+  # remixer
+  {
+    :name         => :remixer,
+    :id3v2_frames => ['TPE4'],
+    :handler      => :read_first_id3,
+    :type         => Type::STRING,
+  },
+
   # lyrics
   {
     :name         => :lyrics,

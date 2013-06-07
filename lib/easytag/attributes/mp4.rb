@@ -334,6 +334,22 @@ module EasyTag::Attributes
     :type       => Type::STRING,
   },
 
+  # conductor
+  {
+    :name       => :conductor,
+    :handler    => :user_info_lookup,
+    :handler_opts => {:key => :conductor},
+    :type       => Type::STRING,
+  },
+
+  # remixer
+  {
+    :name       => :remixer,
+    :handler    => :user_info_lookup,
+    :handler_opts => {:key => :remixer},
+    :type       => Type::STRING,
+  },
+
   # lyricist
   {
     :name       => :lyricist,

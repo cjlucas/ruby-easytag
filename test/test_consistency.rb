@@ -185,6 +185,8 @@ class TestConsistency02 < Test::Unit::TestCase
       :compilation?,
       :bpm,
       :asin,
+      :conductor,
+      :remixer,
     ]
 
     cases.each do |c|
