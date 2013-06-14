@@ -1,3 +1,6 @@
+##### v0.4.1 (2013-06-14) #####
+* fixed: `MP4#original_date` now returns it's default value
+
 ##### v0.4.0 (2013-06-07) #####
 * added: general attributes
   - `#asin`
