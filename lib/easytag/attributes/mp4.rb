@@ -188,6 +188,14 @@ module EasyTag::Attributes
     :default    => nil,
   },
 
+  # original_date
+  {
+    :name       => :original_date,
+    :handler    => :read_default,
+    :type       => Type::DATETIME,
+
+  },
+
   # year
   {
     :name       => :year,
