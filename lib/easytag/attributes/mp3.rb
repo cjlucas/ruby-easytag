@@ -45,6 +45,8 @@ module EasyTag::Attributes
         data.desc = frame.description
         data.type = frame.type
         data.mime_type = frame.mime_type
+      elsif frame.is_a?(TagLib::ID3v2::UnknownFrame)
+        nil
       else
         warn 'no defined frames match the given frame'
       end
