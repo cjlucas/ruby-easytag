@@ -1,3 +1,8 @@
+##### v0.4.2 (2013-06-23) #####
+* added: interal support for `TagLib::ID3v2::UnknownFrame`
+* info: because a new version of taglib-ruby hasn't been officially released
+  yet, this version of EasyTag requires ref `bb6453e` at `robinst/taglib-ruby`
+
 ##### v0.4.1 (2013-06-14) #####
 * fixed: `MP4#original_date` now returns it's default value
 
