@@ -1,6 +1,8 @@
 require 'easytag/base'
 
 module EasyTag
+  class EasyTagFileUnsupportedError < Exception; end
+
   class File < Base
     attr_reader :file
 
@@ -8,8 +10,8 @@ module EasyTag
       @file = file
 
       if audio_interface_class.nil?
-        raise AudioMetadataProxyFileUnsupportedError.new(
-          "Couldn't determine which interface to use")
+        raise EasyTagFileUnsupportedError,
+          "Couldn't determine which interface to use"
       end
 
       @interface = audio_interface_class.new(file)
