@@ -3,8 +3,6 @@ require 'taglib'
 require 'easytag/interfaces'
 
 module EasyTag
-  class EasyTagFileUnsupportedError < Exception; end
-
   class Base
     attr_reader :interface
 
