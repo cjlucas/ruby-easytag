@@ -1,3 +1,6 @@
+##### v0.4.3 (2013-08-20) #####
+* fixed: uninitialized constant error with regard to file unsupported exception
+
 ##### v0.4.2 (2013-06-23) #####
 * added: interal support for `TagLib::ID3v2::UnknownFrame`
 * info: because a new version of taglib-ruby hasn't been officially released
