@@ -27,7 +27,7 @@ describe EasyTag do
         tagger.disc_number.should eql(3)
         tagger.total_discs.should eql(nil)
 
-        expect(tagger.bpm).to           be(0)
+        expect(tagger.bpm).to           be(nil)
         expect(tagger.compilation?).to  be_false
       end
     end
