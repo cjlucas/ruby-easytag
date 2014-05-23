@@ -1,16 +1,15 @@
 $LOAD_PATH.unshift(File.expand_path('../lib', __FILE__))
 
-require 'rake/testtask'
+require 'rspec/core/rake_task'
 
 require 'easytag/version'
 
-task :default => [:test]
+task :default => [:spec]
 
-task :test do
-  Rake::TestTask.new do |t|
-    t.libs << 'test'
-    t.test_files = FileList['test/test_*.rb']
-    t.verbose = false
+task :spec do
+  RSpec::Core::RakeTask.new do |task|
+    task.verbose = false
+    task.rspec_opts = '--color'
   end
 end
 

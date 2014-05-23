@@ -2,47 +2,82 @@ require 'mp3info'
 
 require 'easytag/attributes/mp3'
 
-module EasyTag::Interfaces
+module EasyTag
+  class MP3Tagger
+    extend MP3AttributeAccessors
+    attr_reader :taglib
 
-  class MP3 < Base
-    ATTRIB_ARGS  = EasyTag::Attributes::MP3_ATTRIB_ARGS
-    ATTRIB_CLASS = EasyTag::Attributes::MP3Attribute
+    single_tag_reader :title, 'TIT2', :title
+    single_tag_reader :title_sort_order, %w{TSOT XSOT}
+    single_tag_reader :subtitle, 'TIT3'
+    single_tag_reader :artist, 'TPE1', :artist
+    single_tag_reader :artist_sort_order, %w{TSOP XSOP}
+    single_tag_reader :album, 'TALB', :album
+    single_tag_reader :album_sort_order, %w{TSOA XSOA}
+    single_tag_reader :album_artist, 'TPE2'
+    single_tag_reader :album_artist_sort_order, 'TSO2'
+    single_tag_reader :compilation?, 'TCMP', nil, returns: :bool
+    single_tag_reader :genre, 'TCON', :genre
+    single_tag_reader :disc_subtitle, 'TSST'
+    single_tag_reader :media, 'TMED'
+    single_tag_reader :label, 'TPUB'
+    single_tag_reader :encoded_by, 'TENC'
+    single_tag_reader :encoder_settings, 'TSSE'
+    single_tag_reader :group, 'TIT1'
+    single_tag_reader :composer, 'TCOM'
+    single_tag_reader :conductor, 'TPE3'
+    single_tag_reader :remixer, 'TPE4'
+    single_tag_reader :lyrics, 'USLT'
+    single_tag_reader :lyricist, 'TEXT'
+    single_tag_reader :copyright, 'TCOP'
+    single_tag_reader :bpm, 'TBPM', nil, returns: :int
+    single_tag_reader :mood, 'TMOD'
+    single_tag_reader :track_num, 'TRCK', :track, returns: :int_pair
+    single_tag_reader :disc_num, 'TPOS', nil, returns: :int_pair
+    single_tag_reader :original_date, %w{TDOR TORY}, nil, returns: :datetime
+
+    all_tags_reader :comments, 'COMM', :comment
+    all_tags_reader :album_art, 'APIC'
+
+    audio_prop_reader :length
+    audio_prop_reader :bitrate
+    audio_prop_reader :sample_rate
+    audio_prop_reader :channels
+    audio_prop_reader :copyrighted?
+    audio_prop_reader :layer
+    audio_prop_reader :original?
+    audio_prop_reader :protection_enabled?, :protection_enabled
+
+    user_info_reader :asin, 'ASIN'
+    user_info_reader :script, 'SCRIPT'
+    user_info_reader :barcode, 'BARCODE'
+    user_info_reader :catalog_number, 'CATALOGNUMBER'
+    user_info_reader :musicbrainz_album_id, 'MusicBrainz Album Id'
+    user_info_reader :musicbrainz_artist_id, 'MusicBrainz Artist Id', returns: :list
+    user_info_reader :musicbrainz_album_artist_id, 'MusicBrainz Album Artist Id'
+    user_info_reader :musicbrainz_trm_id, 'MusicBrainz TRM Id'
+    user_info_reader :musicbrainz_disc_id, 'MusicBrainz Disc Id'
+    user_info_reader :musicbrainz_release_status, 'MusicBrainz Album Status'
+    user_info_reader :musicbrainz_release_type, 'MusicBrainz Album Type', returns: :list
+    user_info_reader :musicbrainz_release_country, 'MusicBrainz Album Release Country'
+    user_info_reader :musicbrainz_release_group_id, 'MusicBrainz Release Group Id'
+    user_info_reader :musicip_puid, 'MusicIP PUID'
+    user_info_reader :musicip_fingerprint, 'MusicMagic Fingerprint'
+
+    ufid_reader :musicbrainz_track_id, 'http://musicbrainz.org'
+    date_reader :date
 
     def initialize(file)
-      @info = TagLib::MPEG::File.new(file)
-
-      add_tdat_to_taglib(file)
+      @taglib = TagLib::MPEG::File.new(file)
     end
 
-    private
-
-    def add_tdat_to_taglib(file)
-      # this is required because taglib hash issues with the TDAT+TYER
-      # frame (https://github.com/taglib/taglib/issues/127)
-      id3v2_hash = ID3v2.new
-
-      File.open(file) do |fp|
-        fp.read(3) # read past ID3 identifier
-        begin
-          id3v2_hash.from_io(fp)
-        rescue ID3v2Error => e
-          warn 'no id3v2 tags found'
-        end
-      end
-
-      # delete all TDAT frames (taglib-ruby segfaults when trying to read)
-      frames = @info.id3v2_tag.frame_list('TDAT')
-      frames.each { |frame| @info.id3v2_tag.remove_frame(frame) } 
-
-      if id3v2_hash['TDAT']
-        frame = TagLib::ID3v2::TextIdentificationFrame
-          .new('TDAT', TagLib::String::UTF8) 
-
-        frame.text = id3v2_hash['TDAT']
-        @info.id3v2_tag.add_frame(frame)
-      end
+    def year
+      date.year unless date.nil?
     end
 
-    self.build_attributes(ATTRIB_CLASS, ATTRIB_ARGS)
+    def method_missing(method, *args, **kwargs)
+      warn "#{self.class.name}##{method} does not exist"
+      nil
+    end
   end
 end

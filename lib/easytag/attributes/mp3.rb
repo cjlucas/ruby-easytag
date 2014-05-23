@@ -4,6 +4,157 @@ require 'easytag/image'
 require 'easytag/util'
 require 'easytag/attributes/base'
 
+module EasyTag
+  module MP3AttributeAccessors
+    include BaseAttributeAccessors
+
+    def single_tag_reader(attr_name, id3v2_frames = nil, id3v1_tag = nil, **opts)
+      id3v2_frames = Array(id3v2_frames)
+      define_method(attr_name) do
+        v = self.class.read_first_tag(taglib, id3v2_frames, id3v1_tag, opts)
+        self.class.post_process(v, opts)
+      end
+    end
+
+    def all_tags_reader(attr_name, id3v2_frames = nil, id3v1_tag = nil, **opts)
+      id3v2_frames = Array(id3v2_frames)
+      define_method(attr_name) do
+        v = self.class.read_all_tags(taglib, id3v2_frames, id3v1_tag, opts)
+        self.class.post_process(v, opts)
+      end
+    end
+
+    def audio_prop_reader(attr_name, prop_name = nil, **opts)
+      prop_name = attr_name if prop_name.nil?
+      define_method(attr_name) do
+        v = self.class.read_audio_property(taglib, prop_name)
+        self.class.post_process(v, opts)
+      end
+    end
+
+    def user_info_reader(attr_name, key = nil, **opts)
+      key = attr_name if key.nil?
+      define_method(attr_name) do
+        @user_info = self.class.read_user_info(taglib, **opts) if @user_info.nil?
+        self.class.post_process(@user_info[key], opts)
+      end
+    end
+
+    def ufid_reader(attr_name, owner, **opts)
+      define_method(attr_name) do
+        v = self.class.read_ufid(taglib, owner, opts)
+        self.class.post_process(v, opts)
+      end
+    end
+
+    def date_reader(attr_name, **opts)
+      opts[:returns] = :datetime unless opts.has_key?(:returns)
+      define_method(attr_name) do
+        v = self.class.read_date(taglib, opts)
+        self.class.post_process(v, opts)
+      end
+    end
+
+    # gets data from each frame id given only falls back
+    # to the id3v1 tag if no id3v2 frames were found
+    def read_all_tags(taglib, id3v2_frames, id3v1_tag = nil, **opts)
+      frames = []
+      id3v2_frames.each { |frame_id| frames += id3v2_frames(taglib, frame_id) }
+
+      data = []
+      # only check id3v1 if no id3v2 frames found
+      if frames.empty?
+        data << id3v1_tag(taglib, id3v1_tag) unless id3v1_tag.nil?
+      else
+        frames.each { |frame| data << data_from_frame(frame, **opts) }
+      end
+
+      data.compact
+    end
+
+    def read_first_tag(taglib, id3v2_frames, id3v1_tag = nil, **opts)
+      read_all_tags(taglib, id3v2_frames, id3v1_tag, **opts).first
+    end
+
+    def read_audio_property(taglib, key)
+      taglib.audio_properties.send(key)
+    end
+
+    def id3v1_tag(taglib, tag_name)
+      return nil if taglib.id3v1_tag.empty?
+      v = taglib.id3v1_tag.send(tag_name)
+      # TEMPFIX: nonexistent id3v1 tags return an empty string (taglib-ruby issue #49)
+      case
+      when v.is_a?(Fixnum) && v.zero?
+        nil
+      when v.is_a?(String) && v.empty?
+        nil
+      else
+        v
+      end
+    end
+
+    def id3v2_frames(taglib, frame_id)
+      taglib.id3v2_tag.frame_list(frame_id)
+    end
+
+    def data_from_frame(frame, **opts)
+      case
+      when frame.is_a?(TagLib::ID3v2::TextIdentificationFrame)
+        field_list = frame.field_list
+        opts[:field_list] ? field_list : field_list.first
+      when frame.is_a?(TagLib::ID3v2::UnsynchronizedLyricsFrame)
+        frame.text
+      when frame.is_a?(TagLib::ID3v2::CommentsFrame)
+        frame.text
+      when frame.is_a?(TagLib::ID3v2::AttachedPictureFrame)
+        EasyTag::Image.new(frame.picture).tap do |img|
+          img.desc = frame.description
+          img.type = frame.type
+          img.mime_type = frame.mime_type
+        end
+      else
+        nil
+      end
+    end
+
+    def read_user_info(taglib, **opts)
+      user_info = {}
+      frame_data = read_all_tags(taglib, ['TXXX'], nil, {field_list: true})
+
+      frame_data.each do |data|
+        key = data[0]
+        values = data[1..-1]
+
+        user_info[key] = values.count > 1 ? values : values.first
+      end
+
+      user_info
+    end
+
+    # NOTE: id3v2.3 tags (TYER+TDAT) will lose month/day information due to taglib's
+    # internal frame conversion. During the conversion, the TDAT frame is
+    # dropped and only the TYER frame is used in the conversion to TDRC.
+    # (see: https://github.com/taglib/taglib/issues/127)
+    def read_date(taglib, **opts)
+      v10_year = taglib.id3v1_tag.year.to_s if taglib.id3v1_tag.year > 0
+      v24_date = read_first_tag(taglib, ['TDRC'])
+
+      # check variables in order of importance
+      date_str = v24_date || v10_year
+      puts "MP3#date: date_str = \"#{date_str}\"" if $DEBUG
+
+      date_str
+    end
+
+    def read_ufid(taglib, owner, opts)
+      frames = taglib.id3v2_tag.frame_list('UFID')
+      frames.each { |frame| return frame.identifier if owner.eql?(frame.owner) }
+      nil
+    end
+  end
+end
+
 module EasyTag::Attributes
   class MP3Attribute < BaseAttribute
     attr_reader :name, :ivar
@@ -23,131 +174,6 @@ module EasyTag::Attributes
     end
 
 
-    def frames_for_id(id, iface)
-      iface.info.id3v2_tag.frame_list(id)
-    end
-
-    def first_frame_for_id(id, iface)
-      frames_for_id(id, iface).first
-    end
-
-    def data_from_frame(frame)
-      data = nil
-      if frame.is_a?(TagLib::ID3v2::TextIdentificationFrame)
-        field_list = frame.field_list
-        data = @options[:field_list] ? field_list : field_list.first
-      elsif frame.is_a?(TagLib::ID3v2::UnsynchronizedLyricsFrame)
-        data = frame.text
-      elsif frame.is_a?(TagLib::ID3v2::CommentsFrame)
-        data = frame.text
-      elsif frame.is_a?(TagLib::ID3v2::AttachedPictureFrame)
-        data = EasyTag::Image.new(frame.picture)
-        data.desc = frame.description
-        data.type = frame.type
-        data.mime_type = frame.mime_type
-      elsif frame.is_a?(TagLib::ID3v2::UnknownFrame)
-        nil
-      else
-        warn 'no defined frames match the given frame'
-      end
-
-      data
-    end
-
-    #
-    # read handlers
-    #
-    
-    # read_all_id3
-    #
-    # gets data from each frame id given
-    # only falls back to the id3v1 tag if none found
-    def read_all_id3(iface)
-      frames = []
-      @id3v2_frames.each do |f| 
-        frames += frames_for_id(f, iface)
-      end
-
-      data = []
-      # only check id3v1 if no id3v2 frames found
-      if frames.empty?
-        data << iface.info.id3v1_tag.send(@id3v1_tag) unless @id3v1_tag.nil?
-      else
-        frames.each { |frame| data << data_from_frame(frame) }
-      end
-
-      data
-    end
-
-    # read_first_id3
-    #
-    # Similar to read_all_id3, but optimized for reading only one frame at max
-    def read_first_id3(iface)
-      frame = nil
-      @id3v2_frames.each do |f|
-        frame = first_frame_for_id(f, iface) if frame.nil?
-      end
-
-      if frame.nil?
-        data = iface.info.id3v1_tag.send(@id3v1_tag) unless @id3v1_tag.nil?
-      else
-        data = data_from_frame(frame)
-      end
-
-      data
-    end
-
-    def read_int_pair(iface)
-      int_pair_str = read_first_id3(iface).to_s
-      EasyTag::Utilities.get_int_pair(int_pair_str)
-    end
-
-    def read_field_list_as_key_value(iface)
-      kv_hash = {}
-      frame_data = read_all_id3(iface)
-
-      frame_data.each do |data|
-        key = data[0]
-        values = data[1..-1]
-
-        key = Utilities.normalize_string(key) if @options[:normalize]
-        key = key.to_sym if @options[:to_sym]
-        kv_hash[key] = values.count > 1 ? values : values.first
-      end
-
-      kv_hash
-    end
-
-    def read_date(iface)
-      id3v1 = iface.info.id3v1_tag
-
-      v10_year = id3v1.year.to_s if id3v1.year > 0
-      v23_year = data_from_frame(first_frame_for_id('TYER', iface))
-      v23_date = data_from_frame(first_frame_for_id('TDAT', iface))
-      v24_date = data_from_frame(first_frame_for_id('TDRC', iface))
-
-      # check variables in order of importance
-      date_str = v24_date || v23_year || v10_year
-      # only append v23_date if date_str is currently a year
-      date_str << v23_date unless v23_date.nil? or date_str.length > 4
-      puts "MP3#date: date_str = \"#{date_str}\"" if $DEBUG
-
-      date_str
-    end
-
-    def read_ufid(iface)
-      frames = iface.info.id3v2_tag.frame_list('UFID')
-      ufid = nil
-
-      frames.each do |frame|
-        if @handler_opts[:owner].eql?(frame.owner)
-          ufid = frame.identifier
-          break
-        end
-      end
-
-      ufid
-    end
   end
 end
 

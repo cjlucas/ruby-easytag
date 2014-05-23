@@ -52,6 +52,7 @@ module EasyTag
     #
     # Parses a pos/total string and returns a pair of ints
     def self.get_int_pair(str)
+      str = str.to_s
       pair = [0, 0]
 
       unless str.nil? || str.empty?
