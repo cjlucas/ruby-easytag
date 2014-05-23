@@ -1,5 +1,4 @@
 require 'bundler/setup'
 
 require 'easytag/util'
-require 'easytag/file'
-require 'easytag/interfaces'
+require 'easytag/taggers/mp3'
