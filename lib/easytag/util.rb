@@ -51,15 +51,17 @@ module EasyTag
     # get_int_pair
     #
     # Parses a pos/total string and returns a pair of ints
-    def self.get_int_pair(str)
-      str = str.to_s
+    def self.get_int_pair(input)
+      return input.collect { |i| i.to_i }[0..1] if input.is_a?(Array)
+
+      input = input.to_s
       pair = [0, 0]
 
-      unless str.nil? || str.empty?
-        if str.include?('/')
-          pair = str.split('/').map { |it| it.to_i }
+      unless input.nil? || input.empty?
+        if input.include?('/')
+          pair = input.split('/').map { |it| it.to_i }
         else
-          pair[0] = str.to_i
+          pair[0] = input.to_i
         end
       end
 
