@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b73afa0b-d3b9-4d77-873d-172d39127c46" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/easytag.rb" afterPath="$PROJECT_DIR$/lib/easytag.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/easytag/attributes/mp4.rb" afterPath="$PROJECT_DIR$/lib/easytag/attributes/mp4.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/ruby-easytag.iml" afterPath="$PROJECT_DIR$/.idea/ruby-easytag.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/easytag/taggers/mp3.rb" afterPath="$PROJECT_DIR$/lib/easytag/taggers/mp3.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/easytag/taggers/mp4.rb" afterPath="$PROJECT_DIR$/lib/easytag/taggers/mp4.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.rb" afterPath="$PROJECT_DIR$/test.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ruby-easytag.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -78,11 +76,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="mp3.rb" pinned="false" current="false" current-in-tab="false">
+          <file leaf-file-name="mp3.rb" pinned="false" current="true" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/lib/easytag/taggers/mp3.rb">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="700" max-vertical-offset="1424">
-                  <caret line="60" column="51" selection-start-line="60" selection-start-column="51" selection-end-line="60" selection-end-column="51" />
+                <state vertical-scroll-proportion="0.06095238" vertical-offset="0" max-vertical-offset="1360">
+                  <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -98,11 +96,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="mp4.rb" pinned="false" current="true" current-in-tab="true">
+          <file leaf-file-name="mp4.rb" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/lib/easytag/taggers/mp4.rb">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.15238096" vertical-offset="0" max-vertical-offset="1120">
-                  <caret line="5" column="16" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="16" />
+                <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1104">
+                  <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -122,21 +120,21 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="base.rb" pinned="false" current="false" current-in-tab="true">
+          <file leaf-file-name="base.rb" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/lib/easytag/attributes/base.rb">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.8841355" vertical-offset="0" max-vertical-offset="688">
-                  <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
+                <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="688">
+                  <caret line="15" column="19" selection-start-line="15" selection-start-column="19" selection-end-line="15" selection-end-column="19" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="base.rb" pinned="false" current="false" current-in-tab="false">
+          <file leaf-file-name="base.rb" pinned="false" current="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/lib/easytag/taggers/base.rb">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
-                  <caret line="5" column="16" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="16" />
+                <state vertical-scroll-proportion="0.25668448" vertical-offset="0" max-vertical-offset="561">
+                  <caret line="9" column="5" selection-start-line="9" selection-start-column="5" selection-end-line="9" selection-end-column="5" />
                   <folding />
                 </state>
               </provider>
@@ -169,7 +167,6 @@
         <option value="$PROJECT_DIR$/spec/mp3_tagger_spec.rb" />
         <option value="$PROJECT_DIR$/.travis.yml" />
         <option value="$PROJECT_DIR$/lib/easytag/version.rb" />
-        <option value="$PROJECT_DIR$/lib/easytag/taggers/base.rb" />
         <option value="$PROJECT_DIR$/lib/easytag.rb" />
         <option value="$PROJECT_DIR$/lib/easytag/attributes/base.rb" />
         <option value="$PROJECT_DIR$/lib/easytag/attributes/mp3.rb" />
@@ -177,7 +174,9 @@
         <option value="$PROJECT_DIR$/spec/util_spec.rb" />
         <option value="$PROJECT_DIR$/spec/mp4_tagger_spec.rb" />
         <option value="$PROJECT_DIR$/lib/easytag/attributes/mp4.rb" />
+        <option value="$PROJECT_DIR$/lib/easytag/taggers/base.rb" />
         <option value="$PROJECT_DIR$/lib/easytag/taggers/mp4.rb" />
+        <option value="$PROJECT_DIR$/lib/easytag/taggers/mp3.rb" />
       </list>
     </option>
   </component>
@@ -983,14 +982,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/easytag/taggers/mp3.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="700" max-vertical-offset="1424">
-          <caret line="60" column="51" selection-start-line="60" selection-start-column="51" selection-end-line="60" selection-end-column="51" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/easytag/attributes/mp4.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="800">
@@ -1007,26 +998,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/easytag/taggers/base.rb">
+    <entry file="file://$PROJECT_DIR$/lib/easytag/attributes/base.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
-          <caret line="5" column="16" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="16" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="688">
+          <caret line="15" column="19" selection-start-line="15" selection-start-column="19" selection-end-line="15" selection-end-column="19" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/easytag/attributes/base.rb">
+    <entry file="file://$PROJECT_DIR$/lib/easytag/taggers/base.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8841355" vertical-offset="0" max-vertical-offset="688">
-          <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
+        <state vertical-scroll-proportion="0.25668448" vertical-offset="0" max-vertical-offset="561">
+          <caret line="9" column="5" selection-start-line="9" selection-start-column="5" selection-end-line="9" selection-end-column="5" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/easytag/taggers/mp4.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.15238096" vertical-offset="0" max-vertical-offset="1120">
-          <caret line="5" column="16" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="16" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1104">
+          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/easytag/taggers/mp3.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.06095238" vertical-offset="0" max-vertical-offset="1360">
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
           <folding />
         </state>
       </provider>

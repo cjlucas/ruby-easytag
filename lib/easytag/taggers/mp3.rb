@@ -1,11 +1,10 @@
-require 'mp3info'
-
 require 'easytag/attributes/mp3'
 
+require_relative 'base'
+
 module EasyTag
-  class MP3Tagger
+  class MP3Tagger < BaseTagger
     extend MP3AttributeAccessors
-    attr_reader :taglib
 
     single_tag_reader :title, 'TIT2', :title
     single_tag_reader :title_sort_order, %w{TSOT XSOT}
@@ -71,9 +70,6 @@ module EasyTag
       @taglib = TagLib::MPEG::File.new(file)
     end
 
-    def year
-      date.year unless date.nil?
-    end
 
     def method_missing(method, *args, **kwargs)
       warn "#{self.class.name}##{method} does not exist"

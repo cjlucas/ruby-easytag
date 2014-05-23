@@ -3,9 +3,8 @@ require 'easytag/attributes/mp4'
 require_relative 'base'
 
 module EasyTag
-  class MP4Tagger
+  class MP4Tagger < BaseTagger
     extend MP4AttributeAccessors
-    attr_reader :taglib
 
     item_reader :title, '©nam'
     item_reader :title_sort_order, 'sonm'
