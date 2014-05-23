@@ -167,5 +167,4 @@ describe EasyTag::MP3Tagger do
       @consistency02.musicbrainz_release_status.should    eql('official')
     end
   end
-
 end
