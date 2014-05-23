@@ -53,6 +53,7 @@ module EasyTag
     user_info_reader :script, 'SCRIPT'
     user_info_reader :barcode, 'BARCODE'
     user_info_reader :catalog_number, 'CATALOGNUMBER'
+    user_info_reader :musicbrainz_track_id, 'MusicBrainz Release Track Id'
     user_info_reader :musicbrainz_album_id, 'MusicBrainz Album Id'
     user_info_reader :musicbrainz_artist_id, 'MusicBrainz Artist Id', returns: :list
     user_info_reader :musicbrainz_album_artist_id, 'MusicBrainz Album Artist Id'
@@ -65,7 +66,7 @@ module EasyTag
     user_info_reader :musicip_puid, 'MusicIP PUID'
     user_info_reader :musicip_fingerprint, 'MusicMagic Fingerprint'
 
-    ufid_reader :musicbrainz_track_id, 'http://musicbrainz.org'
+    ufid_reader :musicbrainz_recording_id, 'http://musicbrainz.org'
     date_reader :date
 
     def initialize(file)

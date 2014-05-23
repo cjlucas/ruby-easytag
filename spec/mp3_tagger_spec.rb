@@ -79,6 +79,7 @@ describe EasyTag::MP3Tagger do
       expect(@no_tags.musicbrainz_album_id).to          be_nil
       expect(@no_tags.musicbrainz_release_type).to      be_empty
       expect(@no_tags.musicbrainz_track_id).to          be_nil
+      expect(@no_tags.musicbrainz_recording_id).to      be_nil
       expect(@no_tags.musicbrainz_release_country).to   be_nil
     end
 
@@ -167,6 +168,8 @@ describe EasyTag::MP3Tagger do
       @consistency02.barcode.should                       eql('828765013321')
       @consistency02.catalog_number.should                eql('82876 50133 2')
       @consistency02.musicbrainz_release_type.should      eql(['album'])
+      @consistency02.musicbrainz_recording_id.should      eql('e1402418-eaea-4108-81e3-a12c22178325')
+      @consistency02.musicbrainz_track_id.should          be(nil)
       @consistency02.musicbrainz_album_artist_id.should   eql('73fdb566-a9b1-494c-9f32-51768ec9fd27')
       @consistency02.musicbrainz_artist_id.count.should   be(2)
       @consistency02.musicbrainz_artist_id.should         include('73fdb566-a9b1-494c-9f32-51768ec9fd27')
