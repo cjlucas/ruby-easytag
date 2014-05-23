@@ -40,6 +40,7 @@ module EasyTag
     item_reader :conductor, '----:com.apple.iTunes:CONDUCTOR'
     item_reader :lyricist, '----:com.apple.iTunes:LYRICIST'
     item_reader :asin, '----:com.apple.iTunes:ASIN'
+    item_reader :isrc, '----:com.apple.iTunes:ISRC'
     item_reader :script, '----:com.apple.iTunes:SCRIPT'
     item_reader :barcode, '----:com.apple.iTunes:BARCODE'
     item_reader :catalog_number, '----:com.apple.iTunes:CATALOGNUMBER'

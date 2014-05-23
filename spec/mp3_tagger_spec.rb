@@ -160,6 +160,7 @@ describe EasyTag::MP3Tagger do
       @consistency02.label.should                   eql('Arista')
       @consistency02.compilation?.should            be(true)
       @consistency02.bpm.should                     be(nil)
+      @consistency02.isrc.should                    eql('USAR10300997')
     end
 
     it 'should read all musicbrainz attributes correctly' do

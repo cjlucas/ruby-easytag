@@ -89,6 +89,7 @@ describe EasyTag::MP4Tagger do
 
     it 'should read all musicbrainz attributes correctly' do
       @consistency02.asin.should                          eql('B0000AGWFX')
+      @consistency02.isrc.should                          eql('USAR10300997')
       @consistency02.script.should                        eql('Latn')
       @consistency02.barcode.should                       eql('828765013321')
       @consistency02.catalog_number.should                eql('82876 50133 2')
