@@ -16,15 +16,17 @@ describe EasyTag::MP3Tagger do
 
   context 'when containing only id3v1 tags' do
     it 'should read all id3v1 tags correctly' do
-      @id3v1_only.title.should      eql('Track Title')
-      @id3v1_only.artist.should     eql('Track Artist')
-      @id3v1_only.album.should      eql('Album Name')
-      @id3v1_only.comments.should   eql(['this is a comment'])
-      @id3v1_only.genre.should      eql('Swing')
-      @id3v1_only.year.should       eq(1988)
-      @id3v1_only.date.year.should  eq(1988)
-      @id3v1_only.track_num.should  eql([3, 0])
-      @id3v1_only.disc_num.should   eql([0, 0])
+      @id3v1_only.title.should        eql('Track Title')
+      @id3v1_only.artist.should       eql('Track Artist')
+      @id3v1_only.album.should        eql('Album Name')
+      @id3v1_only.comments.should     eql(['this is a comment'])
+      @id3v1_only.genre.should        eql('Swing')
+      @id3v1_only.year.should         be(1988)
+      @id3v1_only.date.year.should    be(1988)
+      @id3v1_only.track_number.should    be(3)
+      @id3v1_only.total_tracks.should be(nil)
+      @id3v1_only.disc_number.should     be(nil)
+      @id3v1_only.total_discs.should  be(nil)
     end
 
     it 'should return proper responses for attributes that require id3v2' do
@@ -34,15 +36,17 @@ describe EasyTag::MP3Tagger do
 
   context 'when containing only id3v2 tags' do
     it 'should read all id3v2 tags correctly' do
-      @id3v2_only.title.should      eql('Track Title')
-      @id3v2_only.artist.should     eql('Track Artist')
-      @id3v2_only.album.should      eql('Album Name')
-      @id3v2_only.comments.should   eql(['this is a comment'])
-      @id3v2_only.genre.should      eql('Swing')
-      @id3v2_only.year.should       eq(1988)
-      @id3v2_only.date.year.should  eq(1988)
-      @id3v2_only.track_num.should  eql([3, 0])
-      @id3v2_only.disc_num.should   eql([0, 0])
+      @id3v2_only.title.should        eql('Track Title')
+      @id3v2_only.artist.should       eql('Track Artist')
+      @id3v2_only.album.should        eql('Album Name')
+      @id3v2_only.comments.should     eql(['this is a comment'])
+      @id3v2_only.genre.should        eql('Swing')
+      @id3v2_only.year.should         be(1988)
+      @id3v2_only.date.year.should    be(1988)
+      @id3v2_only.track_number.should    be(3)
+      @id3v2_only.total_tracks.should be(nil)
+      @id3v2_only.disc_number.should     be(nil)
+      @id3v2_only.total_discs.should  be(nil)
     end
   end
 
@@ -61,8 +65,10 @@ describe EasyTag::MP3Tagger do
       expect(@no_tags.remixer).to       be_nil
       expect(@no_tags.mood).to          be_nil
 
-      @no_tags.track_num.should eql([0, 0])
-      @no_tags.disc_num.should  eql([0, 0])
+      @no_tags.track_number.should         be(nil)
+      @no_tags.total_tracks.should      be(nil)
+      @no_tags.disc_number.should          be(nil)
+      @no_tags.total_discs.should       be(nil)
     end
 
     it 'should return the proper response for musicbrainz data' do
@@ -101,8 +107,10 @@ describe EasyTag::MP3Tagger do
       @consistency01.date.year.should     eql(1941)
       @consistency01.date.month.should    eql(12)
       @consistency01.date.day.should      eql(7)
-      @consistency01.track_num.should     eql([5, 0])
-      @consistency01.disc_num.should      eql([3, 0])
+      @consistency01.track_number.should     eql(5)
+      @consistency01.total_tracks.should  be(nil)
+      @consistency01.disc_number.should      be(3)
+      @consistency01.total_discs.should   be(nil)
     end
 
     it 'should read album art correctly' do
@@ -142,8 +150,10 @@ describe EasyTag::MP3Tagger do
       @consistency02.date.year.should               be(2003)
       @consistency02.date.month.should              be(9)
       @consistency02.date.day.should                be(23)
-      @consistency02.track_num.should               eql([8, 21])
-      @consistency02.disc_num.should                eql([2, 2])
+      @consistency02.track_number.should            be(8)
+      @consistency02.total_tracks.should            be(21)
+      @consistency02.disc_number.should                be(2)
+      @consistency02.total_discs.should             be(2)
       @consistency02.disc_subtitle.should           eql('The Love Below')
       @consistency02.media.should                   eql('CD')
       @consistency02.label.should                   eql('Arista')

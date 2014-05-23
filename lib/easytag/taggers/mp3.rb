@@ -31,8 +31,10 @@ module EasyTag
     single_tag_reader :copyright, 'TCOP'
     single_tag_reader :bpm, 'TBPM', nil, returns: :int
     single_tag_reader :mood, 'TMOD'
-    single_tag_reader :track_num, 'TRCK', :track, returns: :int_pair
-    single_tag_reader :disc_num, 'TPOS', nil, returns: :int_pair
+    single_tag_reader :track_number, 'TRCK', :track, cast: :int_pair, extract_list_pos: 0
+    single_tag_reader :total_tracks, 'TRCK', :track, cast: :int_pair, extract_list_pos: 1
+    single_tag_reader :disc_number, 'TPOS', nil, cast: :int_pair, extract_list_pos: 0
+    single_tag_reader :total_discs, 'TPOS', nil, cast: :int_pair, extract_list_pos: 1
     single_tag_reader :original_date, %w{TDOR TORY}, nil, returns: :datetime
 
     all_tags_reader :comments, 'COMM', :comment

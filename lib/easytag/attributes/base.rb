@@ -9,8 +9,8 @@ module EasyTag
       end
     end
 
-    def cast(data, opts)
-      case opts[:returns]
+    def cast(data, key, **opts)
+      case opts[key]
       when :int
         data.to_i
       when :int_pair
@@ -26,8 +26,17 @@ module EasyTag
       end
     end
 
+    def extract(data, **opts)
+      if opts.has_key?(:extract_list_pos)
+        data = data[opts[:extract_list_pos]]
+      end
+      data
+    end
+
     def post_process(data, opts)
-      cast(data, opts)
+      data = cast(data, :cast, **opts)
+      data = extract(data, **opts)
+      cast(data, :returns, **opts)
     end
 
     def read_audio_property(taglib, key)

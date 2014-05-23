@@ -1,4 +1,3 @@
-# encoding: UTF-8
 require 'easytag/attributes/base'
 
 module EasyTag
@@ -15,8 +14,8 @@ module EasyTag
     end
 
     def data_from_item(item, **opts)
-      case opts[:returns]
-      when :list
+      case opts[:data_type]
+      when :string_list
         item.to_string_list
       when :bool
         item.to_bool

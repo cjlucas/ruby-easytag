@@ -22,8 +22,10 @@ describe EasyTag do
         tagger.date.year.should eql(1941)
         tagger.date.month.should eql(12)
         tagger.date.day.should eql(7)
-        tagger.track_num.should eql([5, 0])
-        tagger.disc_num.should eql([3, 0])
+        tagger.track_number.should eql(5)
+        tagger.total_tracks.should eql(nil)
+        tagger.disc_number.should eql(3)
+        tagger.total_discs.should eql(nil)
 
         expect(tagger.bpm).to           be(0)
         expect(tagger.compilation?).to  be_false

@@ -2,10 +2,11 @@ require_relative 'spec_helper'
 
 describe EasyTag::Utilities do
   it '#get_int_pair parses int pairs' do
-    EasyTag::Utilities.get_int_pair(nil).should     eql([0, 0])
-    EasyTag::Utilities.get_int_pair('').should      eql([0, 0])
-    EasyTag::Utilities.get_int_pair('3').should     eql([3, 0])
-    EasyTag::Utilities.get_int_pair('/9').should    eql([0, 9])
+    EasyTag::Utilities.get_int_pair(nil).should     eql([nil, nil])
+    EasyTag::Utilities.get_int_pair('').should      eql([nil, nil])
+    EasyTag::Utilities.get_int_pair('3').should     eql([3, nil])
+    EasyTag::Utilities.get_int_pair('/9').should    eql([nil, 9])
+    EasyTag::Utilities.get_int_pair('0/0').should   eql([0, 0])
     EasyTag::Utilities.get_int_pair('5/10').should  eql([5, 10])
     EasyTag::Utilities.get_int_pair([8, 21]).should eql([8, 21])
   end

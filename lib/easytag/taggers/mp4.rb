@@ -15,19 +15,21 @@ module EasyTag
     item_reader :album, '©alb'
     item_reader :album_sort_order, 'soal'
     item_reader :genre, '©gen'
-    item_reader :comments, '©cmt', returns: :list
+    item_reader :comments, '©cmt', data_type: :string_list, returns: :list
     item_reader :lyrics, '©lyr'
     item_reader :date, '©day', returns: :datetime
     item_reader :encoded_by, '©enc'
     item_reader :encoder_settings, '©too'
     item_reader :group, '©grp'
-    item_reader :compilation?, 'cpil', returns: :bool
-    item_reader :bpm, 'tmpo', returns: :int
+    item_reader :compilation?, 'cpil', data_type: :bool
+    item_reader :bpm, 'tmpo', data_type: :int
     item_reader :mood, 'mood'
     item_reader :copyright, 'cprt'
-    item_reader :track_num, 'trkn', returns: :int_pair
-    item_reader :disc_num, 'disk', returns: :int_pair
-    item_reader :album_art, 'covr', returns: :cover_art_list
+    item_reader :track_number, 'trkn', data_type: :int_pair, cast: :list, extract_list_pos: 0
+    item_reader :total_tracks, 'trkn', data_type: :int_pair, cast: :list, extract_list_pos: 1
+    item_reader :disc_number, 'disk', data_type: :int_pair, cast: :list, extract_list_pos: 0
+    item_reader :total_discs, 'disk', data_type: :int_pair, cast: :list, extract_list_pos: 1
+    item_reader :album_art, 'covr', data_type: :cover_art_list, returns: :list
 
     item_reader :subtitle, '----:com.apple.iTunes:SUBTITLE'
     item_reader :disc_subtitle, '----:com.apple.iTunes:DISCSUBTITLE'
