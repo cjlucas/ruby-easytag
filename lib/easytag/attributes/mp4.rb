@@ -16,7 +16,7 @@ module EasyTag
 
     def data_from_item(item, **opts)
       case opts[:returns]
-      when :string_list
+      when :list
         item.to_string_list
       when :bool
         item.to_bool
@@ -33,11 +33,7 @@ module EasyTag
 
     def read_item(taglib, key, **opts)
       item = taglib.tag.item_list_map[key]
-      return case opts[:returns]
-             when :string_list; []
-             else; nil
-             end if item.nil?
-      data_from_item(item, **opts)
+      data_from_item(item, **opts) unless item.nil?
     end
   end
 end

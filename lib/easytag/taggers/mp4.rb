@@ -15,7 +15,7 @@ module EasyTag
     item_reader :album, '©alb'
     item_reader :album_sort_order, 'soal'
     item_reader :genre, '©gen'
-    item_reader :comments, '©cmt', returns: :string_list
+    item_reader :comments, '©cmt', returns: :list
     item_reader :lyrics, '©lyr'
     item_reader :date, '©day', returns: :datetime
     item_reader :encoded_by, '©enc'
@@ -42,12 +42,12 @@ module EasyTag
 
     item_reader :musicbrainz_recording_id, '----:com.apple.iTunes:MusicBrainz Track Id'
     item_reader :musicbrainz_track_id, '----:com.apple.iTunes:MusicBrainz Release Track Id'
-    item_reader :musicbrainz_artist_id, '----:com.apple.iTunes:MusicBrainz Artist Id', returns: :string_list
+    item_reader :musicbrainz_artist_id, '----:com.apple.iTunes:MusicBrainz Artist Id', returns: :list
     item_reader :musicbrainz_album_artist_id, '----:com.apple.iTunes:MusicBrainz Album Artist Id'
     item_reader :musicbrainz_album_id, '----:com.apple.iTunes:MusicBrainz Album Id'
     item_reader :musicbrainz_release_group_id, '----:com.apple.iTunes:MusicBrainz Release Group Id'
     item_reader :musicbrainz_release_status, '----:com.apple.iTunes:MusicBrainz Album Status'
-    item_reader :musicbrainz_release_type, '----:com.apple.iTunes:MusicBrainz Album Type', returns: :string_list
+    item_reader :musicbrainz_release_type, '----:com.apple.iTunes:MusicBrainz Album Type', returns: :list
     item_reader :musicbrainz_release_country, '----:com.apple.iTunes:MusicBrainz Album Release Country'
 
     audio_prop_reader :length

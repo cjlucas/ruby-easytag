@@ -13,6 +13,8 @@ module EasyTag
       case opts[:returns]
       when :int
         data.to_i
+      when :int_pair
+        Utilities.get_int_pair(data)
       when :datetime
         Utilities.get_datetime(data.to_s)
       when :list
@@ -25,9 +27,8 @@ module EasyTag
     end
 
     def post_process(data, opts)
-      data = Utilities.get_int_pair(data) if opts[:returns] == :int_pair
       cast(data, opts)
-      end
+    end
 
     def read_audio_property(taglib, key)
       taglib.audio_properties.send(key)
