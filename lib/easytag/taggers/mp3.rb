@@ -71,11 +71,5 @@ module EasyTag
     def initialize(file)
       @taglib = TagLib::MPEG::File.new(file)
     end
-
-
-    def method_missing(method, *args, **kwargs)
-      warn "#{self.class.name}##{method} does not exist"
-      nil
-    end
   end
 end

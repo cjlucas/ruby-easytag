@@ -9,5 +9,10 @@ module EasyTag
     def close
       taglib.close
     end
+
+    def method_missing(method, *args, **kwargs)
+      warn "#{self.class.name}##{method} does not exist"
+      nil
+    end
   end
 end
