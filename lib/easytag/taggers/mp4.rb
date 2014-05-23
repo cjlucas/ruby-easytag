@@ -39,17 +39,18 @@ module EasyTag
     item_reader :remixer, '----:com.apple.iTunes:REMIXER'
     item_reader :lyricist, '----:com.apple.iTunes:LYRICIST'
     item_reader :asin, '----:com.apple.iTunes:ASIN'
+    item_reader :script, '----:com.apple.iTunes:SCRIPT'
     item_reader :barcode, '----:com.apple.iTunes:BARCODE'
     item_reader :catalog_number, '----:com.apple.iTunes:CATALOGNUMBER'
 
     item_reader :musicbrainz_recording_id, '----:com.apple.iTunes:MusicBrainz Track Id'
     item_reader :musicbrainz_track_id, '----:com.apple.iTunes:MusicBrainz Release Track Id'
-    item_reader :musicbrainz_artist_id, '----:com.apple.iTunes:MusicBrainz Artist Id', returns: :list
+    item_reader :musicbrainz_artist_id, '----:com.apple.iTunes:MusicBrainz Artist Id', data_type: :string_list, returns: :list
     item_reader :musicbrainz_album_artist_id, '----:com.apple.iTunes:MusicBrainz Album Artist Id'
     item_reader :musicbrainz_album_id, '----:com.apple.iTunes:MusicBrainz Album Id'
     item_reader :musicbrainz_release_group_id, '----:com.apple.iTunes:MusicBrainz Release Group Id'
     item_reader :musicbrainz_release_status, '----:com.apple.iTunes:MusicBrainz Album Status'
-    item_reader :musicbrainz_release_type, '----:com.apple.iTunes:MusicBrainz Album Type', returns: :list
+    item_reader :musicbrainz_release_type, '----:com.apple.iTunes:MusicBrainz Album Type', data_type: :string_list, returns: :list
     item_reader :musicbrainz_release_country, '----:com.apple.iTunes:MusicBrainz Album Release Country'
 
     audio_prop_reader :length

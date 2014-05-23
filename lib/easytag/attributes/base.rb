@@ -12,7 +12,7 @@ module EasyTag
     def cast(data, key, **opts)
       case opts[key]
       when :int
-        data.to_i
+        data.nil? ? nil : data.to_i
       when :int_pair
         Utilities.get_int_pair(data)
       when :datetime
@@ -20,7 +20,7 @@ module EasyTag
       when :list
         Array(data)
       when :bool
-        [1, '1'].include?(data)
+        [1, '1', true].include?(data)
       else
         data
       end
