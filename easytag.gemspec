@@ -21,7 +21,6 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency('taglib-ruby', '>= 0.6.0')
   s.add_runtime_dependency('ruby-imagespec', '>= 0.3.1')
-  s.add_runtime_dependency('ruby-mp3info', '>= 0.8')
 
   s.add_development_dependency('rake')
 end
