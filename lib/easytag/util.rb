@@ -67,30 +67,5 @@ module EasyTag
 
       pair
     end
-
-    def self.normalize_string(str)
-      str = str.to_s
-      # downcase string
-      str.downcase!
-      # we want snakecase
-      str.gsub!(/\s/, '_')
-      # we only want alphanumeric characters
-      str.gsub(/\W/, '')
-    end
-
-    def self.normalize_object(object)
-      if object.is_a?(String)
-        normalize_string(object)
-      elsif object.is_a?(Symbol)
-        normalize_string(object.to_s).to_sym
-      elsif object.is_a?(Array)
-        new_array = []
-        object.each { |item| new_array << normalize_object(item) }
-        new_array
-      else
-          object
-      end
-    end
-
   end
 end
