@@ -2,7 +2,11 @@ require 'date'
 require 'easytag'
 
 DOT = '&#x25cf;'
-TAGGERS = {MP3: EasyTag::MP3Tagger, MP4: EasyTag::MP4Tagger}
+TAGGERS = {
+    mp3: EasyTag::MP3Tagger,
+    mp4: EasyTag::MP4Tagger,
+    flac: EasyTag::FLACTagger,
+}
 
 NOTES = {
 }
@@ -18,13 +22,13 @@ end
 methods = methods.to_a.sort
 
 puts "#### Standard Attributes (Last Updated: #{Date.today}) ####"
-puts '| Field | MP3 | MP4 | Notes|'
-puts '|-------|:---:|:---:|------|'
+puts '| Field | MP3 | MP4 | FLAC | Notes|'
+puts '|-------|:---:|:---:|:----:|------|'
 
 methods.each do |method|
   line = "| `##{method}` "
-  TAGGERS.each_value do |tagger|
-    line << (tagger.instance_methods.include?(method) ? "| #{DOT} " : '| ')
+  [:mp3, :mp4, :flac].each do |key|
+    line << (TAGGERS[key].instance_methods.include?(method) ? "| #{DOT} " : '| ')
   end
   line << '|'
   puts line
