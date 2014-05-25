@@ -1,9 +1,9 @@
 require_relative 'spec_helper'
 
-describe EasyTag::FLACTagger do
+describe EasyTag::OggTagger do
   before(:all) do
-    @no_tags        = EasyTag::FLACTagger.new(data_path('no_tags.flac'))
-    @consistency02  = EasyTag::FLACTagger.new(data_path('consistency.02.flac'))
+    @no_tags        = EasyTag::OggTagger.new(data_path('no_tags.ogg'))
+    @consistency02  = EasyTag::OggTagger.new(data_path('consistency.02.ogg'))
   end
 
   after(:all) do
