@@ -12,7 +12,7 @@ module EasyTag
 
     def method_missing(method, *args, **kwargs)
       warn "#{self.class.name}##{method} does not exist"
-      nil
+      method.to_s[-1].eql?('?') ? false : nil
     end
   end
 

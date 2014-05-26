@@ -34,6 +34,13 @@ EasyTag.open('audio.mp3') do |tagger|
  
  # tagger.close will be called after the block is executed
 end
+
+# Taggers also return consistent defaults for missing attributes
+EasyTag..open('no_tags.ogg') do |tagger|
+  tagger.year       # => 0 (for any int attribute)
+  tagger.album_art  # => [] (for any list attribute)
+  tagger.title      # => nil (for any non-int, non-list attribute)
+end
 ```
 
 
