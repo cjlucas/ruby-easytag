@@ -1,14 +1,6 @@
 require_relative 'spec_helper'
 
 describe EasyTag::MP4Tagger do
-  before(:all) do
-    @no_tags = EasyTag::MP4Tagger.new(data_path('no_tags.m4a'))
-  end
-
-  after(:all) do
-    easytag_close @no_tags
-  end
-
-  include_context 'no tags', EasyTag::MP4Tagger.new(data_path('no_tags.m4a'))
-  include_context 'consistency', EasyTag::MP4Tagger.new(data_path('consistency.m4a'))
+  include_context 'no tags', described_class.new(data_path('no_tags.m4a'))
+  include_context 'consistency', described_class.new(data_path('consistency.m4a'))
 end

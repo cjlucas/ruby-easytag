@@ -11,8 +11,9 @@ describe EasyTag::MP3Tagger do
     easytag_close @id3v1_only, @id3v2_only, @no_tags
   end
 
-  include_context 'no tags', EasyTag::MP3Tagger.new(data_path('no_tags.mp3'))
-  include_context 'consistency', EasyTag::MP3Tagger.new(data_path('consistency.mp3'))
+  include_context 'no tags', described_class.new(data_path('no_tags.mp3'))
+  include_context 'consistency', described_class.new(data_path('consistency.mp3'))
+  include_context 'consistency with multiple images', described_class.new(data_path('consistency.multiple_images.mp3'))
 
   context 'when containing only id3v1 tags' do
     it 'should read all id3v1 tags correctly' do

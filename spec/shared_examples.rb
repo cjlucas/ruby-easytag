@@ -86,3 +86,24 @@ shared_context 'consistency' do |tagger|
     tagger.musicbrainz_release_status.should    eql('official')
   end
 end
+
+shared_context 'consistency with multiple images' do |tagger|
+  after(:all) do
+    easytag_close tagger
+  end
+  it 'should return consistent album art' do
+    tagger.album_art.count.should be(2)
+
+    art = tagger.album_art[0]
+    Digest::SHA1.hexdigest(art.data).should eql('17bd6b61a49c57fb4b2658e66db159c5bdef1106')
+    art.mime_type.should                    eql('image/jpeg')
+    art.width.should                        eq(15)
+    art.height.should                       eq(15)
+
+    art = tagger.album_art[1]
+    Digest::SHA1.hexdigest(art.data).should eql('2a48f42183fb60891532f0ada60ffb7ea63d706a')
+    art.mime_type.should                    eql('image/png')
+    art.width.should                        eq(20)
+    art.height.should                       eq(20)
+  end
+end
