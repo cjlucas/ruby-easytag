@@ -25,4 +25,4 @@ require 'rspec'
 require 'digest/sha1'
 
 require 'easytag'
-
+require_relative 'shared_examples'
