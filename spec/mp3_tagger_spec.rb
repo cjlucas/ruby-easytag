@@ -8,7 +8,7 @@ describe EasyTag::MP3Tagger do
   end
 
   after(:all) do
-    [@id3v1_only, @id3v2_only, @no_tags].each { |et| et.close }
+    easytag_close @id3v1_only, @id3v2_only, @no_tags
   end
 
   include_context 'no tags', EasyTag::MP3Tagger.new(data_path('no_tags.mp3'))

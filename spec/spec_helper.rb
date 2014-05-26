@@ -21,8 +21,14 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
 SimpleCov.start do
   add_filter '/spec/'
 end
+
+def easytag_close(*instances)
+  instances.each { |instance| instance.close }
+end
+
 require 'rspec'
 require 'digest/sha1'
 
 require 'easytag'
 require_relative 'shared_examples'
+

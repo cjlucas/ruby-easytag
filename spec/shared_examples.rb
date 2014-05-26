@@ -1,6 +1,6 @@
 shared_context 'no tags' do |tagger|
   after(:all) do
-    tagger.close
+    easytag_close tagger
   end
 
   it 'non-list attributes should return nil' do

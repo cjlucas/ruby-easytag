@@ -27,7 +27,7 @@ f.taglib # => <TagLib::FLAC::File:0x007fc28aba4c68 @__swigtype__="_p_TagLib__FLA
 f.close
 
 # A block can also be specified
-EasyTag.open('audio.flac') do |tagger|
+EasyTag.open('audio.mp3') do |tagger|
  tagger.title         # => "She Lives in My Lap"
  tagger.artist        # => "OutKast feat. Rosario Dawson"
  tagger.album_artist  # => "OutKast"

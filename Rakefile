@@ -5,6 +5,7 @@ require 'rspec/core/rake_task'
 require 'easytag/version'
 
 task :default => [:spec]
+task :test => :spec
 
 task :spec do
   RSpec::Core::RakeTask.new do |task|

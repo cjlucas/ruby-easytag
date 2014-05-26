@@ -6,7 +6,7 @@ describe EasyTag::MP4Tagger do
   end
 
   after(:all) do
-    [@no_tags].each { |et| et.close }
+    easytag_close @no_tags
   end
 
   include_context 'no tags', EasyTag::MP4Tagger.new(data_path('no_tags.m4a'))
