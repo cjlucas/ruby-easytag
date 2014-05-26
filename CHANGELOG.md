@@ -1,4 +1,8 @@
-##### v0.6.0 (2013-05-25) ####
+##### v1.0.0 (2013-05-26) #####
+* added: detecting file type from file signature
+* first major release
+
+##### v0.6.0 (2013-05-25) #####
 * complete overhaul, this release is not compatible with any previous release
 * FLAC, Ogg support added
 
