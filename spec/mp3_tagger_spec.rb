@@ -2,9 +2,9 @@ require_relative 'spec_helper'
 
 describe EasyTag::MP3Tagger do
   before(:all) do
-    @id3v1_only     = EasyTag::MP3Tagger.new(data_path('only_id3v1.mp3'))
-    @id3v2_only     = EasyTag::MP3Tagger.new(data_path('only_id3v2.mp3'))
-    @no_tags        = EasyTag::MP3Tagger.new(data_path('no_tags.mp3'))
+    @id3v1_only = described_class.new(data_path('only_id3v1.mp3'))
+    @id3v2_only = described_class.new(data_path('only_id3v2.mp3'))
+    @no_tags    = described_class.new(data_path('no_tags.mp3'))
   end
 
   after(:all) do
@@ -51,7 +51,7 @@ describe EasyTag::MP3Tagger do
     end
   end
 
-  it 'should return the audio properties of the track' do
+  it 'should return the audio properties of the track correctly' do
     @no_tags.length.should              be(4)
     @no_tags.bitrate.should             be(74)
     @no_tags.sample_rate.should         be(44100)
