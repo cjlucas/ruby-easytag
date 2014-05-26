@@ -17,3 +17,8 @@ tmp
 .yardoc
 _yardoc
 doc/
+
+# IntelliJ files (https://intellij-support.jetbrains.com/entries/23393067)
+.idea/dictionaries
+.idea/libraries
+.idea/workspace.xml

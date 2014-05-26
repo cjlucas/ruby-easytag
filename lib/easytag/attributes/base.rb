@@ -1,143 +1,47 @@
-module EasyTag::Attributes
-  # for type casting
-  module Type
-    STRING      = 0
-    INT         = 1
-    FLOAT       = 2
-    INT_LIST    = 3
-    STRING_LIST = 4
-    BOOLEAN     = 5
-    DATETIME    = 6
-    LIST        = 7
-  end
-  class BaseAttribute
-    Utilities = EasyTag::Utilities
-    
-    attr_reader :name, :aliases, :ivar
+module EasyTag
+  module BaseAttributeAccessors
 
-    def initialize(args)
-      @name         = args[:name]
-      @type         = args[:type]
-      @default      = args[:default] || self.class.default_for_type(@type)
-      @options      = args[:options] || {}
-      @handler_opts = args[:handler_opts] || {}
-      @aliases      = args[:aliases] || []
-      @ivar         = BaseAttribute.name_to_ivar(@name)
-
-      if args[:handler].is_a?(Symbol)
-        @handler = method(args[:handler])
-      elsif args[:handler].is_a?(Proc)
-        @handler = args[:handler]
-      end
-
-      # fill default options
-      
-      # Remove nil objects from array (post process)
-      @options[:compact]        ||= false
-      # Delete empty objects in array (post process)
-      @options[:delete_empty]   ||= false
-      # normalizes key (if hash) (handler or post process)
-      @options[:normalize]      ||= false
-      # cast key (if hash) to symbol (handler or post process)
-      @options[:to_sym]         ||= false
-
-    end
-    
-    def self.can_clone?(obj)
-      obj.is_a?(String) || obj.is_a?(Array) || obj.is_a?(Hash)
-    end
-
-    def self.deep_copy(obj)
-      Marshal.load(Marshal.dump(obj))
-    end
-
-    def self.default_for_type(type)
-      case type
-      when Type::STRING
-        ''
-      when Type::DATETIME
-        nil
-      when Type::INT
-        0
-      when Type::INT_LIST
-        [0, 0] # TODO: don't assume an INT_LIST is always an int pair
-      when Type::BOOLEAN
-        false
-      when Type::LIST
-        []
+    def audio_prop_reader(attr_name, prop_name = nil, **opts)
+      prop_name = attr_name if prop_name.nil?
+      define_method(attr_name) do
+        v = self.class.read_audio_property(taglib, prop_name)
+        self.class.post_process(v, opts)
       end
     end
 
-    def default
-      BaseAttribute.can_clone?(@default) ?
-        BaseAttribute.deep_copy(@default) : @default
-    end
-    
-    def call(iface)
-      data = @handler.call(iface)
-      data = type_cast(data)
-      post_process(data)
+    def cast(data, key, **opts)
+      case opts[key]
+      when :int
+        data.nil? ? nil : data.to_i
+      when :int_pair
+        Utilities.get_int_pair(data)
+      when :datetime
+        Utilities.get_datetime(data.to_s)
+      when :list
+        Array(data)
+      when :bool
+        [1, '1', true].include?(data)
+      else
+        data
+      end
     end
 
-    def type_cast(data)
-      case @type
-      when Type::INT
-        data = data.to_i
-      when Type::DATETIME
-        data = Utilities.get_datetime(data.to_s)
-      when Type::LIST
-        data = Array(data)
+    def extract(data, **opts)
+      if opts.has_key?(:extract_list_pos)
+        data = data[opts[:extract_list_pos]]
       end
-      
       data
     end
 
-    def post_process(data)
-      if @options[:is_flag]
-        data = data.to_i == 1 ? true : false
-      end
-
-      # fall back to default if data is nil
-      data ||= default
-
-      # REVIEW: the compact option may not be needed anymore
-      #   since we've done away with casting empty strings to nil
-      data.compact! if @options[:compact] && data.respond_to?(:compact!)
-
-      if @options[:delete_empty]
-        data.select! { |item| !item.empty? if item.respond_to?(:empty?) }
-      end
-
-      data = Utilities.normalize_object(data) if @options[:normalize]
-
-      # TODO: roll this out to a method that supports more than just array
-      if @options[:to_sym] && data.is_a?(Array)
-        data.map! { |item| item.to_sym if item.respond_to?(:to_sym) }
-      end
-
-      data
-    end
-    
-    def self.name_to_ivar(name)
-      name.to_s.gsub(/\?/, '').insert(0, '@').to_sym
+    def post_process(data, opts)
+      data = cast(data, :cast, **opts)
+      data = extract(data, **opts)
+      cast(data, :returns, **opts)
     end
 
-    # read handlers
-
-    def read_default(iface)
-      default
-    end
-
-    def read_audio_property(iface)
-      key = @handler_opts[:key]
-      warn "@handler_opts[:key] doesn't exist" if key.nil?
-      iface.info.audio_properties.send(key)
-    end
-
-    def user_info_lookup(iface)
-      key = @handler_opts[:key]
-      warn "@handler_opts[:key] doesn't exist" if key.nil?
-      iface.user_info_normalized[key]
+    def read_audio_property(taglib, key)
+      taglib.audio_properties.send(key)
     end
   end
 end
+

@@ -50,44 +50,22 @@ module EasyTag
 
     # get_int_pair
     #
-    # Parses a pos/total string and returns a pair of ints
-    def self.get_int_pair(str)
-      pair = [0, 0]
+    # Parses a pos/total string and returns a pair of ints (or nils)
+    def self.get_int_pair(input)
+      return input.collect { |i| i.to_i }[0..1] if input.is_a?(Array)
 
-      unless str.nil? || str.empty?
-        if str.include?('/')
-          pair = str.split('/').map { |it| it.to_i }
+      input = input.to_s
+      pair = [nil, nil]
+
+      unless input.nil? || input.empty?
+        if input.include?('/')
+          pair = input.split('/').collect { |it| it.empty? ? nil : it.to_i }
         else
-          pair[0] = str.to_i
+          pair[0] = input.to_i
         end
       end
 
       pair
     end
-
-    def self.normalize_string(str)
-      str = str.to_s
-      # downcase string
-      str.downcase!
-      # we want snakecase
-      str.gsub!(/\s/, '_')
-      # we only want alphanumeric characters
-      str.gsub(/\W/, '')
-    end
-
-    def self.normalize_object(object)
-      if object.is_a?(String)
-        normalize_string(object)
-      elsif object.is_a?(Symbol)
-        normalize_string(object.to_s).to_sym
-      elsif object.is_a?(Array)
-        new_array = []
-        object.each { |item| new_array << normalize_object(item) }
-        new_array
-      else
-          object
-      end
-    end
-
   end
 end

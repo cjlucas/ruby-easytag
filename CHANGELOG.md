@@ -1,3 +1,7 @@
+##### v0.6.0 (2013-05-25) ####
+* complete overhaul, this release is not compatible with any previous release
+* FLAC, Ogg support added
+
 ##### v0.4.3 (2013-08-20) #####
 * fixed: uninitialized constant error with regard to file unsupported exception
 
