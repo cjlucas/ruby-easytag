@@ -55,11 +55,11 @@ module EasyTag
       return input.collect { |i| i.to_i }[0..1] if input.is_a?(Array)
 
       input = input.to_s
-      pair = [nil, nil]
+      pair = [0, 0]
 
       unless input.nil? || input.empty?
         if input.include?('/')
-          pair = input.split('/').collect { |it| it.empty? ? nil : it.to_i }
+          pair = input.split('/').collect { |it| it.to_i }
         else
           pair[0] = input.to_i
         end

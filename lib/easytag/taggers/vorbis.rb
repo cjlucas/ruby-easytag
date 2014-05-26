@@ -30,7 +30,7 @@ module EasyTag
       field_reader :lyrics
       field_reader :lyricist
       field_reader :copyright
-      field_reader :bpm
+      field_reader :bpm, returns: :int
       field_reader :mood
       field_reader :isrc
       field_reader :track_number, 'TRACKNUMBER', returns: :int

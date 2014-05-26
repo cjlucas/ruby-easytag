@@ -6,7 +6,7 @@ module EasyTag
 
     def item_reader(attr_name, key = nil, **opts)
       key = attr_name if key.nil?
-
+      opts[:returns] = opts[:data_type] if opts[:returns].nil? && opts[:cast].nil? # clunky
       define_method(attr_name) do
         v = self.class.read_item(taglib, key, **opts)
         self.class.post_process(v, **opts)

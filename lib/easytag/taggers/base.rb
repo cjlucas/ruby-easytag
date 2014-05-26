@@ -3,7 +3,7 @@ module EasyTag
     attr_reader :taglib
 
     def year
-      date.year unless date.nil?
+      date.nil? ? 0 : date.year
     end
 
     def close

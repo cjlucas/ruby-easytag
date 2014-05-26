@@ -25,9 +25,9 @@ describe EasyTag::MP3Tagger do
       @id3v1_only.year.should         be(1988)
       @id3v1_only.date.year.should    be(1988)
       @id3v1_only.track_number.should be(3)
-      @id3v1_only.total_tracks.should be(nil)
-      @id3v1_only.disc_number.should  be(nil)
-      @id3v1_only.total_discs.should  be(nil)
+      @id3v1_only.total_tracks.should be(0)
+      @id3v1_only.disc_number.should  be(0)
+      @id3v1_only.total_discs.should  be(0)
     end
 
     it 'should return proper responses for attributes that require id3v2' do
@@ -45,9 +45,9 @@ describe EasyTag::MP3Tagger do
       @id3v2_only.year.should         be(1988)
       @id3v2_only.date.year.should    be(1988)
       @id3v2_only.track_number.should be(3)
-      @id3v2_only.total_tracks.should be(nil)
-      @id3v2_only.disc_number.should  be(nil)
-      @id3v2_only.total_discs.should  be(nil)
+      @id3v2_only.total_tracks.should be(0)
+      @id3v2_only.disc_number.should  be(0)
+      @id3v2_only.total_discs.should  be(0)
     end
   end
 

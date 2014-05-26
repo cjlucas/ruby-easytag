@@ -12,7 +12,7 @@ module EasyTag
     def cast(data, key, **opts)
       case opts[key]
       when :int
-        data.nil? ? nil : data.to_i
+        data.to_i
       when :int_pair
         Utilities.get_int_pair(data)
       when :datetime

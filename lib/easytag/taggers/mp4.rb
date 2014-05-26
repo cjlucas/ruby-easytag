@@ -25,10 +25,10 @@ module EasyTag
     item_reader :bpm, 'tmpo', data_type: :int
     item_reader :mood, 'mood'
     item_reader :copyright, 'cprt'
-    item_reader :track_number, 'trkn', data_type: :int_pair, cast: :list, extract_list_pos: 0
-    item_reader :total_tracks, 'trkn', data_type: :int_pair, cast: :list, extract_list_pos: 1
-    item_reader :disc_number, 'disk', data_type: :int_pair, cast: :list, extract_list_pos: 0
-    item_reader :total_discs, 'disk', data_type: :int_pair, cast: :list, extract_list_pos: 1
+    item_reader :track_number, 'trkn', data_type: :int_pair, cast: :int_pair, extract_list_pos: 0
+    item_reader :total_tracks, 'trkn', data_type: :int_pair, cast: :int_pair, extract_list_pos: 1
+    item_reader :disc_number, 'disk', data_type: :int_pair, cast: :int_pair, extract_list_pos: 0
+    item_reader :total_discs, 'disk', data_type: :int_pair, cast: :int_pair, extract_list_pos: 1
     item_reader :album_art, 'covr', data_type: :cover_art_list, returns: :list
 
     item_reader :subtitle, '----:com.apple.iTunes:SUBTITLE'

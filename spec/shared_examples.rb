@@ -3,21 +3,27 @@ shared_context 'no tags' do |tagger|
     easytag_close tagger
   end
 
-  it 'non-list attributes should return nil' do
+  it 'should return nil for non-list/non-int attributes' do
     [:title, :title_sort_order, :artist, :artist_sort_order,
      :album_artist, :album_artist_sort_order, :album, :album_sort_order,
-     :genre, :lyrics, :date, :year, :encoded_by, :group, :track_number, :total_tracks,
-     :disc_number, :total_discs, :mood, :copyright, :subtitle, :disc_subtitle, :media,
+     :genre, :lyrics, :date, :encoded_by, :group, :mood, :copyright, :subtitle, :disc_subtitle, :media,
      :label, :composer, :remixer, :lyricist, :asin, :barcode, :catalog_number,
      :musicbrainz_recording_id, :musicbrainz_track_id, :musicbrainz_album_artist_id,
      :musicbrainz_album_id, :musicbrainz_release_group_id,
      :musicbrainz_release_status, :musicbrainz_release_country].each do |attr|
       actual = tagger.send(attr)
-      actual.should be(nil), "##{attr} should return nil but returned #{actual.class}:#{actual}\""
+      actual.should be(nil), "##{attr} should return nil but returned #{actual.class}:#{actual}"
     end
   end
 
-  it 'list attributes should be empty' do
+  it 'should return zero for int attributes' do
+    [:year, :bpm, :track_number, :total_tracks, :disc_number, :total_discs].each do |attr|
+      actual = tagger.send(attr)
+      actual.should be(0), "##{attr} should return 0 but returned #{actual.class}:#{actual}"
+    end
+  end
+
+  it 'should return an empty array for list attributes' do
     [:comments, :album_art, :musicbrainz_artist_id, :musicbrainz_release_type].each do |attr|
       actual = tagger.send(attr)
       actual.should be_a(Array), "##{attr} should return an Array but returned #{actual.class}"
@@ -54,7 +60,7 @@ shared_context 'consistency' do |tagger|
     tagger.media.should                   eql('CD')
     tagger.label.should                   eql('Arista')
     tagger.compilation?.should            be(true)
-    tagger.bpm.should                     be(nil)
+    tagger.bpm.should                     be(0)
     tagger.asin.should                    eql('B0000AGWFX')
     tagger.isrc.should                    eql('USAR10300997')
     tagger.script.should                  eql('Latn')
